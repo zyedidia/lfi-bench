@@ -12,22 +12,6 @@ you have built the following toolchains and placed them in `/opt`:
 You can find instructions for building these toolchains
 [here](https://github.com/zyedidia/lfi-llvm-toolchain).
 
-## dav1d
+Benchmarks and instructions:
 
-Download the sources and benchmark data:
-
-```
-./download.sh
-```
-
-Build the configurations:
-
-```
-./build.sh
-```
-
-Execute the benchmark with Hyperfine:
-
-```
-./bench.sh
-```
+* [dav1d](https://github.com/zyedidia/lfi-bench/tree/master/dav1d)
