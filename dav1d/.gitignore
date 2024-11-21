@@ -1,4 +1,3 @@
-build-lfi
-build-lfi-stores
-build-native
+build*
 dav1d
+dav1d-benchdata*
