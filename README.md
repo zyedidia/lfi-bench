@@ -12,6 +12,9 @@ you have built the following toolchains and placed them in `/opt`:
 You can find instructions for building these toolchains
 [here](https://github.com/zyedidia/lfi-llvm-toolchain).
 
+For running the benchmarks you will also need the `lfi-run` tool from the [LFI
+repository](https://github.com/zyedidia/lfi).
+
 Benchmarks and instructions:
 
 * [dav1d](https://github.com/zyedidia/lfi-bench/tree/master/dav1d)
