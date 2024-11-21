@@ -1,15 +1,15 @@
 ## dav1d
 
-Download the sources and benchmark data:
-
-```
-./download.sh
-```
-
-Build the configurations:
+Download and build source code:
 
 ```
 ./build.sh
+```
+
+Download the benchmark data:
+
+```
+./download.sh
 ```
 
 Execute the benchmark with Hyperfine:
