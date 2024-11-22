@@ -2,8 +2,6 @@
 
 set -ex
 
-
-
 rm -rf build-lfi
 mkdir -p build-lfi
 cd build-lfi
