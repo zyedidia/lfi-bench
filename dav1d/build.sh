@@ -2,8 +2,6 @@
 
 set -x
 
-git clone https://github.com/zyedidia/dav1d -b lfi
-
 meson setup build-lfi dav1d --cross-file ../toolchains/aarch64-lfi.txt -Ddefault_library=static
 ninja -C build-lfi
 

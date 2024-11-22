@@ -3,13 +3,14 @@
 Download and build source code:
 
 ```
+./download-source.sh
 ./build.sh
 ```
 
 Download the benchmark data:
 
 ```
-./download.sh
+./download-data.sh
 ```
 
 Execute the benchmark with Hyperfine:
