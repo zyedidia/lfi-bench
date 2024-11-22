@@ -21,9 +21,11 @@ Execute the benchmark with Hyperfine:
 
 # Results
 
+## Apple M2
+
 Expected results on an Apple M2 with the core frequency pinned to 3.096GHz:
 
-Encode benchmark:
+### Encode benchmark
 
 ```
 Benchmark 1: lfi-run -- ./build-lfi/src/opus_demo -e voip 48000 2 96000 opus-benchdata/music_orig.wav /dev/null
@@ -44,7 +46,12 @@ Summary
     1.05 ± 0.00 times faster than lfi-run -- ./build-lfi/src/opus_demo -e voip 48000 2 96000 opus-benchdata/music_orig.wav /dev/null
 ```
 
-Decode benchmark:
+Summary:
+
+* LFI-full: 4.8% overhead
+* LFI-stores: 1.3% overhead
+
+### Decode benchmark
 
 ```
 Benchmark 1: lfi-run -- ./build-lfi/src/opus_demo -d 48000 2 opus-benchdata/music_orig.opus /dev/null
@@ -64,3 +71,8 @@ Summary
     1.03 ± 0.00 times faster than lfi-run -- ./build-lfi-stores/src/opus_demo -d 48000 2 opus-benchdata/music_orig.opus /dev/null
     1.09 ± 0.00 times faster than lfi-run -- ./build-lfi/src/opus_demo -d 48000 2 opus-benchdata/music_orig.opus /dev/null
 ```
+
+Summary:
+
+* LFI-full: 9.5% overhead
+* LFI-stores: 2.7% overhead

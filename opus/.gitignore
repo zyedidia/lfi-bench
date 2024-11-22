@@ -1,4 +1,4 @@
-build*
+build-*
 opus
 opus-benchdata
 *.tar.gz

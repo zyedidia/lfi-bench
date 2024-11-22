@@ -21,6 +21,8 @@ Execute the benchmark with Hyperfine:
 
 # Results
 
+## Apple M2
+
 Expected results on an Apple M2 with the core frequency pinned to 3.096GHz:
 
 ```
@@ -41,3 +43,8 @@ Summary
     1.01 ± 0.00 times faster than lfi-run -- build-lfi-stores/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads 1
     1.04 ± 0.00 times faster than lfi-run -- build-lfi/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads 1
 ```
+
+Summary:
+
+* LFI-full: 4.1% overhead
+* LFI-stores: 1.1% overhead
