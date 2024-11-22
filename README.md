@@ -20,3 +20,4 @@ Benchmarks and instructions:
 * [dav1d](https://github.com/zyedidia/lfi-bench/tree/master/dav1d)
 * [opus](https://github.com/zyedidia/lfi-bench/tree/master/opus)
 * [coremark](https://github.com/zyedidia/lfi-bench/tree/master/coremark)
+* [libvpx](https://github.com/zyedidia/lfi-bench/tree/master/vpx)
