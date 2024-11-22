@@ -18,3 +18,4 @@ repository](https://github.com/zyedidia/lfi).
 Benchmarks and instructions:
 
 * [dav1d](https://github.com/zyedidia/lfi-bench/tree/master/dav1d)
+* [opus](https://github.com/zyedidia/lfi-bench/tree/master/opus)
