@@ -21,3 +21,4 @@ Benchmarks and instructions:
 * [opus](https://github.com/zyedidia/lfi-bench/tree/master/opus)
 * [coremark](https://github.com/zyedidia/lfi-bench/tree/master/coremark)
 * [libvpx](https://github.com/zyedidia/lfi-bench/tree/master/libvpx)
+* [libjpeg-turbo](https://github.com/zyedidia/lfi-bench/tree/master/libjpeg-turbo)
