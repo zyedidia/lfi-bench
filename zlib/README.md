@@ -13,7 +13,7 @@ Generate the benchmark data:
 ./gen-testdata.sh
 ```
 
-Execute builtin zstd compression benchmark
+Execute handrolled benchmarks
 
 ```
 ./bench.sh
