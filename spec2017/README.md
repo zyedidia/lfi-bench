@@ -14,7 +14,7 @@ Benchmarks were run with LLVM 19.1.4 with LTO enabled.
 
 Geomean overheads on M2 (aarch64) and 7950X (x86-64).
 
-* `aarch64-lfi`: 7.3%
-* `aarch64-lfi-stores`: 1.6%
+* `aarch64-lfi`: 6.1%
+* `aarch64-lfi-stores`: 1.5%
 * `x86_64-lfi`: 7.5%
 * `x86_64-lfi-stores`: 5.9%
