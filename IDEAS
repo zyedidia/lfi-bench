@@ -1,0 +1,34 @@
+Potential benchmarks
+
+other
+-----
+libsqlite -- ships with android
+freetype -- part of AOSP
+
+image processing
+----------------
+opencv -- doesn't ship with android, popular with apps
+neven  (face detector)- part of AOSP
+
+parsing 
+-------
+libxstl, libxml2, libexpat-- ships with android
+tinyxml -- AOSP external
+
+compression:
+
+liblzma -- ships with android
+bzip2 -- part of android external
+
+codecs
+--------
+ffmpeg -- lots of codecs, built in benchmarking, used by android apps but not a default
+libvips -- does dynamic code generation (liborc) and multithreading, will require some extra work
+libskia -- part of android-ish
+libwebp -- ships with android
+libvorbis -- " "
+libpng -- " "
+libogg -- " "
+giflib -- part of AOSP
+sonivox
+
