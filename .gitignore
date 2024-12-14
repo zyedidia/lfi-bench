@@ -3,3 +3,6 @@
 !results/aarch64/m2/*.csv
 !results/aarch64/x1/*.csv
 !results/aarch64/axion/*.csv
+build-lfi
+build-lfi-stores
+build-native
