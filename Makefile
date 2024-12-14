@@ -19,6 +19,14 @@ bench:
 	make -C opus
 	make -C zlib
 
+clean:
+	make -C coremark clean
+	make -C dav1d clean
+	make -C libjpeg-turbo clean
+	make -C libvpx clean
+	make -C opus clean
+	make -C zlib clean
+
 consolidate:
 	mkdir -p results/$(MACHINE)
 	go run results/consolidate.go -config LFI \
@@ -39,4 +47,4 @@ consolidate:
 plot:
 	@echo "TODO"
 
-.PHONY: bench consolidate plot build
+.PHONY: bench consolidate plot build clean
