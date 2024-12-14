@@ -1,0 +1,8 @@
+coremark,13.79983
+dav1d,16.02756
+libjpeg-turbo,1.91998
+libvpx,13.20614
+opus_decode,0.18947
+opus_encode,0.67733
+zlib_compress,0.40839
+zlib_decompress,0.06417
