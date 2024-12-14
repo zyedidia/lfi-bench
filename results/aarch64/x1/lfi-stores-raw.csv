@@ -2,7 +2,7 @@ coremark,13.60996
 dav1d,15.64759
 libjpeg-turbo,1.81783
 libvpx,12.27260
-opus_decode,0.17893
-opus_encode,0.65587
-zlib_compress,0.38826
-zlib_decompress,0.05802
+opus-decode,0.17893
+opus-encode,0.65587
+zlib-compress,0.38826
+zlib-decompress,0.05802
