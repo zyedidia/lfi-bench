@@ -34,7 +34,7 @@ bench: vpx-benchdata build-native build-lfi build-lfi-stores
 	hyperfine --export-csv libvpx.csv --runs $(RUNS) --warmup $(WARMUP) \
 		-n 'LFI' 'lfi-run -- ./build-lfi/vpxdec --threads=1 -o /dev/null vpx-benchdata/sample-30s.webm' \
 		-n 'LFI-stores' 'lfi-run -- ./build-lfi-stores/vpxdec --threads=1 -o /dev/null vpx-benchdata/sample-30s.webm' \
-		-n 'Native' './build-native/vpxdec --threads=1 -o /dev/null vpx-benchdata/sample-30s.webm'
+		-n 'Native' 'lfi-run -- ./build-native/vpxdec --threads=1 -o /dev/null vpx-benchdata/sample-30s.webm'
 
 clean:
 	rm -rf vpx-benchdata build-native build-lfi build-lfi-stores libvpx
