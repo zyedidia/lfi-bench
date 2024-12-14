@@ -1,9 +1,9 @@
 coremark,4.553
 dav1d,3.729
 libjpeg-turbo,8.151
-libvpx,23.277
+libvpx,12.300
 opus-decode,8.505
 opus-encode,5.492
 zlib-compress,7.227
 zlib-decompress,11.059
-geomean,8.852
+geomean,7.590
