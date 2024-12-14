@@ -13,17 +13,17 @@ libvpx:
 build-lfi: libvpx
 	mkdir -p build-lfi
 	cd build-lfi && LDFLAGS="-static-pie" CROSS=aarch64-lfi-linux-musl- AR=$(LFI)/bin/llvm-ar CC=$(LFI)/bin/clang CXX=$(LFI)/bin/clang++ ../libvpx/configure
-	make -C build-lfi
+	make -C build-lfi -j8
 
 build-lfi-stores: libvpx
 	mkdir -p build-lfi-stores
 	cd build-lfi-stores && LDFLAGS="-static-pie" CROSS=aarch64-lfi-linux-musl- AR=$(LFI_STORES)/bin/llvm-ar CC=$(LFI_STORES)/bin/clang CXX=$(LFI_STORES)/bin/clang++ ../libvpx/configure
-	make -C build-lfi-stores
+	make -C build-lfi-stores -j8
 
 build-native: libvpx
 	mkdir -p build-native
 	cd build-native && LDFLAGS="-static-pie" CROSS=aarch64-unknown-linux-musl- AR=$(NATIVE)/bin/llvm-ar CC=$(NATIVE)/bin/clang CXX=$(NATIVE)/bin/clang++ ../libvpx/configure
-	make -C build-native
+	make -C build-native -j8
 
 vpx-benchdata:
 	wget https://github.com/zyedidia/lfi-bench/releases/download/benchdata/vpx-benchdata.tar.gz
