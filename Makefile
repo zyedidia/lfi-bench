@@ -1,7 +1,15 @@
 MACHINE ?= current
 
 all:
-	@echo "available targets: bench, consolidate, plot"
+	@echo "available targets: build bench, consolidate, plot"
+
+build:
+	make -C coremark build-lfi build-lfi-stores build-native
+	make -C dav1d build-lfi build-lfi-stores build-native
+	make -C libjpeg-turbo build-lfi build-lfi-stores build-native
+	make -C libvpx build-lfi build-lfi-stores build-native
+	make -C opus build-lfi build-lfi-stores build-native
+	make -C zlib build-lfi build-lfi-stores build-native
 
 bench:
 	make -C coremark
@@ -31,4 +39,4 @@ consolidate:
 plot:
 	@echo "TODO"
 
-.PHONY: bench consolidate plot
+.PHONY: bench consolidate plot build
