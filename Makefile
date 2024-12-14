@@ -27,22 +27,20 @@ clean:
 	make -C opus clean
 	make -C zlib clean
 
+CSV = coremark/*.csv \
+	dav1d/*.csv \
+	libjpeg-turbo/*.csv \
+	libvpx/*.csv \
+	opus/*.csv \
+	zlib/*.csv
+
 consolidate:
 	mkdir -p results/$(MACHINE)
-	go run results/consolidate.go -config LFI \
-		coremark/*.csv \
-		dav1d/*.csv \
-		libjpeg-turbo/*.csv \
-		libvpx/*.csv \
-		opus/*.csv \
-		zlib/*.csv > results/$(MACHINE)/lfi.csv
-	go run results/consolidate.go -config LFI-stores \
-		coremark/*.csv \
-		dav1d/*.csv \
-		libjpeg-turbo/*.csv \
-		libvpx/*.csv \
-		opus/*.csv \
-		zlib/*.csv > results/$(MACHINE)/lfi-stores.csv
+	go run results/consolidate.go -config LFI $(CSV) > results/$(MACHINE)/lfi.csv
+	go run results/consolidate.go -raw -config LFI $(CSV) > results/$(MACHINE)/lfi-raw.csv
+	go run results/consolidate.go -config LFI-stores $(CSV) > results/$(MACHINE)/lfi-stores.csv
+	go run results/consolidate.go -raw -config LFI-stores $(CSV) > results/$(MACHINE)/lfi-stores-raw.csv
+	go run results/consolidate.go -raw -config Native $(CSV) > results/$(MACHINE)/native-raw.csv
 
 plot:
 	@echo "TODO"

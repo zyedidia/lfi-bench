@@ -45,6 +45,13 @@ func readCSV(path string) [][]string {
 	return records
 }
 
+func calcRaw(bench string, benches map[string][]Benchmark, w io.Writer) {
+	config := benches[bench]
+	for _, b := range config {
+		fmt.Fprintf(w, "%s,%.5f\n", b.Name, b.Mean)
+	}
+}
+
 func calcOverhead(bench string, benches map[string][]Benchmark, w io.Writer) {
 	config := benches[bench]
 	geomean := 1.0
@@ -62,6 +69,7 @@ func calcOverhead(bench string, benches map[string][]Benchmark, w io.Writer) {
 
 func main() {
 	config := flag.String("config", "LFI", "Configuration to consolidate (LFI,LFI-stores)")
+	raw := flag.Bool("raw", false, "Dump raw runtimes instead of relative overheads")
 
 	flag.Parse()
 	args := flag.Args()
@@ -84,5 +92,9 @@ func main() {
 		}
 	}
 
-	calcOverhead(*config, benches, os.Stdout)
+	if !*raw {
+		calcOverhead(*config, benches, os.Stdout)
+	} else {
+		calcRaw(*config, benches, os.Stdout)
+	}
 }
