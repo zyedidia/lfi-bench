@@ -27,11 +27,11 @@ bigfile.txt:
 	tr -dc "A-Za-z 0-9" < /dev/urandom | fold -w100|head -n 100000 > bigfile.txt
 
 bench: build-lfi build-lfi-stores build-native bigfile.txt
-	hyperfine --warmup $(WARMUP) --export-csv zlib_compress.csv \
+	hyperfine --warmup $(WARMUP) --export-csv zlib-compress.csv \
 		-n 'LFI' 'lfi-run -- build-lfi/compress_file' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/compress_file' \
 		-n 'Native' 'build-native/compress_file'
-	hyperfine --warmup $(WARMUP) --export-csv zlib_decompress.csv \
+	hyperfine --warmup $(WARMUP) --export-csv zlib-decompress.csv \
 		-n 'LFI' 'lfi-run -- build-lfi/decompress_file' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/decompress_file' \
 		-n 'Native' 'build-native/decompress_file'
