@@ -43,6 +43,6 @@ consolidate:
 	go run results/consolidate.go -raw -config Native $(CSV) > results/$(MACHINE)/native-raw.csv
 
 plot:
-	cd results/$(MACHINE) && gnuplot -p plot.gp
+	cd results/$(MACHINE) && gnuplot plot.gp
 
 .PHONY: bench consolidate plot build clean

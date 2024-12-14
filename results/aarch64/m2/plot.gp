@@ -1,3 +1,5 @@
+set term png
+set output "m2.png"
 set key samplen 1 spacing 1.1 font ",10"
 
 set datafile separator ","
