@@ -1,38 +1,32 @@
 MACHINE ?= current
 
+BENCH=coremark \
+	  dav1d \
+	  libjpeg-turbo \
+	  libvpx \
+	  opus \
+	  zlib \
+	  sqlite
+
+CSV = $(patsubst %,%/*.csv,$(BENCH))
+
 all:
 	@echo "available targets: build bench, consolidate, plot"
 
 build:
-	make -C coremark build-lfi build-lfi-stores build-native
-	make -C dav1d build-lfi build-lfi-stores build-native
-	make -C libjpeg-turbo build-lfi build-lfi-stores build-native
-	make -C libvpx build-lfi build-lfi-stores build-native
-	make -C opus build-lfi build-lfi-stores build-native
-	make -C zlib build-lfi build-lfi-stores build-native
+	for bench in $(BENCH) ; do \
+		$(MAKE) -C $$bench build-lfi build-lfi-stores build-native ; \
+	done
 
 bench:
-	make -C coremark
-	make -C dav1d
-	make -C libjpeg-turbo
-	make -C libvpx
-	make -C opus
-	make -C zlib
+	for bench in $(BENCH) ; do \
+		$(MAKE) -C $$bench bench ; \
+	done
 
 clean:
-	make -C coremark clean
-	make -C dav1d clean
-	make -C libjpeg-turbo clean
-	make -C libvpx clean
-	make -C opus clean
-	make -C zlib clean
-
-CSV = coremark/*.csv \
-	dav1d/*.csv \
-	libjpeg-turbo/*.csv \
-	libvpx/*.csv \
-	opus/*.csv \
-	zlib/*.csv
+	for bench in $(BENCH) ; do \
+		$(MAKE) -C $$bench clean ; \
+	done
 
 consolidate:
 	mkdir -p results/$(MACHINE)

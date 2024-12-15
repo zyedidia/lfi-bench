@@ -4,5 +4,6 @@ libjpeg-turbo,1.19975
 libvpx,8.77413
 opus-decode,0.15337
 opus-encode,0.63004
-zlib-compress,0.31144
-zlib-decompress,0.04109
+zlib-compress,0.31139
+zlib-decompress,0.04107
+sqlite,49.44914
