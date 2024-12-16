@@ -5,8 +5,7 @@ BENCH=coremark \
 	  libjpeg-turbo \
 	  libvpx \
 	  opus \
-	  zlib \
-	  sqlite
+	  zlib
 
 CSV = $(patsubst %,%/*.csv,$(BENCH))
 
