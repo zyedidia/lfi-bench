@@ -3,3 +3,4 @@ fasta1000000.txt
 benchmarks
 lua
 build-*
+!results/aarch64/m2/*.csv
