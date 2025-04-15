@@ -1,0 +1,5 @@
+*.csv
+fasta1000000.txt
+benchmarks
+lua
+build-*
