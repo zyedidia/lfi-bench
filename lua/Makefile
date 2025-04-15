@@ -9,7 +9,7 @@ all: bench
 
 lua:
 	git clone https://github.com/lua/lua
-	mv lua-makefile lua/makefile
+	cp lua-makefile lua/makefile
 
 benchmarks:
 	git clone https://github.com/gligneul/Lua-Benchmarks benchmarks
