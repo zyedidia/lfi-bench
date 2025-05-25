@@ -47,7 +47,7 @@ build-benchmarks: build-lfi build-lfi-stores build-native
 	cmake --build build-native-bench --verbose
 
 
-bench: build-benchmarks
+bench: build-benchmarks bigfile.txt
 	hyperfine --warmup $(WARMUP) --export-csv zlib-compress.csv \
 		-n 'LFI' 'lfi-run -- build-lfi-bench/compress_file' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores-bench/compress_file' \
