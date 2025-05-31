@@ -12,3 +12,11 @@ set(CMAKE_SYSTEM_PROCESSOR aarch64)
 # Sysroot
 set(CMAKE_SYSROOT /opt/aarch64-lfi-stores-clang/sysroot)
 
+#Include multiple roots for CMake to find libraries/headers
+ set(CMAKE_FIND_ROOT_PATH
+     ${CMAKE_SYSROOT}
+   ../benchmark-lib
+ )
+
+ set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)
+ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH)

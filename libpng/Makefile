@@ -1,4 +1,4 @@
-RUNS   ?= 3
+RUNS   ?= 1
 WARMUP ?= 1
 
 JOBS := $(shell nproc)
@@ -31,7 +31,15 @@ install: build-lfi build-lfi-stores build-lfi-native
 	cmake --install build-lfi-stores
 	cmake --install build-native
 
-bench: build-native build-lfi build-lfi-stores
+image.png:
+	wget -O image.png https://svs.gsfc.nasa.gov/vis/a010000/a013000/a013043/frames/4096x2048_2x1_30p/Gaia/sub-warped-gaia-000000.png 
+
+bench: build-native build-lfi build-lfi-stores image.png
+	cat image.png > /dev/null #pull it into buffer cache
+	hyperfine --runs $(RUNS) --export-csv pngtest.csv \
+		-n 'LFI' 'lfi-run -- build-lfi/pngtest image.png' \
+		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/pngtest image.png' \
+		-n 'Native' 'build-native/pngtest image.png'
 
 clean:
 	rm -rf $(TARGET_DIR) build-native build-lfi build-lfi-stores
