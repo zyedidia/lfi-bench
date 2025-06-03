@@ -1,0 +1,9 @@
+CC     := /opt/aarch64-lfi-stores-clang/bin/clang
+CXX    := /opt/aarch64-lfi-stores-clang/bin/clang++
+AS     := /opt/aarch64-lfi-stores-clang/bin/clang
+AR     := /opt/aarch64-lfi-stores-clang/bin/llvm-ar
+STRIP  := /opt/aarch64-lfi-stores-clang/bin/llvm-strip
+
+include Makefile
+
+PREFIX   = /home/talg/repo/lfi-bench/benchmark-lib/aarch64-lfi-stores-clang

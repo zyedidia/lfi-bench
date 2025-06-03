@@ -1,0 +1,9 @@
+CC     := /opt/aarch64-native-clang/bin/clang
+CXX    := /opt/aarch64-native-clang/bin/clang++
+AS     := /opt/aarch64-native-clang/bin/clang
+AR     := /opt/aarch64-native-clang/bin/llvm-ar
+STRIP  := /opt/aarch64-native-clang/bin/llvm-strip
+
+include Makefile
+
+PREFIX   = /home/talg/repo/lfi-bench/benchmark-lib/aarch64-native-clang
