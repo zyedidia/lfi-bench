@@ -25,7 +25,10 @@ build-native: $(TARGET_DIR)
 	cp makefiles/Makefile.native build-native
 	cd build-native; make -f Makefile.native -j $(JOBS)
 
-#install:
+install:
+	cd build-lfi; make -f Makefile.lfi install
+	cd build-lfi-stores; make -f Makefile.lfi-stores install
+	cd build-native; make -f Makefile.native install
 
 image.gif:
 	wget -O image.gif https://svs.gsfc.nasa.gov/vis/a010000/a014100/a014132/BHW_Binary_Black_Holes_Accretion_Disk.gif
