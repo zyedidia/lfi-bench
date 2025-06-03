@@ -1,4 +1,4 @@
-RUNS   ?= 1
+RUNS   ?= 3
 WARMUP ?= 1
 
 JOBS := $(shell nproc)
