@@ -11,3 +11,9 @@ set(CMAKE_STRIP /opt/aarch64-lfi-clang/bin/llvm-strip)
 
 # Sysroot for compiler and linker
 set(CMAKE_SYSROOT /opt/aarch64-lfi-clang/sysroot)
+
+set(APPEND CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}")
+set(CMAKE_FIND_ROOT_PATH "${CMAKE_INSTALL_PREFIX}")
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
