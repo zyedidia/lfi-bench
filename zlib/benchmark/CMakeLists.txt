@@ -3,6 +3,7 @@ project(zlib_examples C)
 
 # Tell the linker where to find libz.a
 link_directories(${ZLIB_DIR})
+include_directories(${ZLIB_INCLUDE})
 
 # Define executables
 add_executable(compress_file compress_file.c)

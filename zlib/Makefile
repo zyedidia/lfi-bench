@@ -39,9 +39,9 @@ bigfile.txt:
 	tr -dc "A-Za-z 0-9" < /dev/urandom | fold -w100|head -n 100000 > bigfile.txt
 
 build-benchmarks: build-lfi build-lfi-stores build-native
-	cmake -S benchmark -B build-lfi-bench -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) -DZLIB_DIR=../build-lfi
-	cmake -S benchmark -B build-lfi-stores-bench -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) -DZLIB_DIR=../build-lfi-stores
-	cmake -S benchmark -B build-native-bench -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) -DZLIB_DIR=../build-native
+	cmake -S benchmark -B build-lfi-bench -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) -DZLIB_DIR=../build-lfi -DZLIB_INCLUDE=../zlib
+	cmake -S benchmark -B build-lfi-stores-bench -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) -DZLIB_DIR=../build-lfi-stores -DZLIB_INCLUDE=../zlib
+	cmake -S benchmark -B build-native-bench -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) -DZLIB_DIR=../build-native -DZLIB_INCLUDE=../zlib
 	cmake --build build-lfi-bench --verbose
 	cmake --build build-lfi-stores-bench --verbose
 	cmake --build build-native-bench --verbose
