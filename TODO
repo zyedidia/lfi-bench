@@ -1,4 +1,6 @@
-Potential benchmarks
+TODO:
+-----
+-finish libxml2 by adding dup2 support to liblfi.
 
 other
 -----
@@ -12,13 +14,12 @@ neven  (face detector)- part of AOSP
 
 parsing 
 -------
-libxstl, libxml2, -- ships with android
-tinyxml -- AOSP external
+libxstl, tinyxml -- AOSP
 
 compression:
+-------------
 
-liblzma -- ships with android
-bzip2 -- part of android external
+liblzma, bzip2, liblz4, minizip,snappy,libarchive
 
 codecs
 --------
@@ -28,4 +29,6 @@ libskia -- part of android-ish
 libvorbis -- " "
 libogg -- " "
 sonivox
-
+libtiff
+flac
+brotli
