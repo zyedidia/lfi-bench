@@ -12,7 +12,7 @@ neven  (face detector)- part of AOSP
 
 parsing 
 -------
-libxstl, libxml2, libexpat-- ships with android
+libxstl, libxml2, -- ships with android
 tinyxml -- AOSP external
 
 compression:
