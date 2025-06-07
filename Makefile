@@ -3,6 +3,7 @@ MACHINE ?= current
 BENCH=coremark \
 	  dav1d \
 	  libjpeg-turbo \
+	  libtiff \
 	  libvpx \
 	  opus \
 	  zlib
