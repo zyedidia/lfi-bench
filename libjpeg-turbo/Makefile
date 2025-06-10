@@ -36,7 +36,9 @@ build-native: libjpeg-turbo-benchmark
 	mkdir -p build-native
 	cp libjpeg-turbo-benchmark/build_release/image_change_quality build-native
 
-bench: build-native build-lfi build-lfi-stores
+bench: libjpeg-turbo.csv
+
+libjpeg-turbo.csv: build-native build-lfi build-lfi-stores
 	hyperfine --export-csv libjpeg-turbo.csv --runs $(RUNS) --warmup $(WARMUP) \
 		-n 'LFI' 'lfi-run -- ./build-lfi/image_change_quality' \
 		-n 'LFI-stores' 'lfi-run -- ./build-lfi-stores/image_change_quality' \

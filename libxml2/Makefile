@@ -30,7 +30,7 @@ build-native: $(TARGET_DIR)
 	cmake -S $(TARGET_DIR) -B build-native -DCMAKE_TOOLCHAIN_FILE=../../toolchains/aarch64-native.cmake --install-prefix $(NATIVE_INSTALL) $(CMAKE_FLAGS)
 	cmake --build build-native -j $(JOBS)
 
-install: build-lfi build-lfi-stores build-lfi-native
+install: build-lfi build-lfi-stores build-native
 	cmake --install build-lfi
 	cmake --install build-lfi-stores
 	cmake --install build-native
@@ -39,7 +39,9 @@ dbpl.xml:
 	wget https://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/dblp/dblp.xml.gz
 	gzip -d dblp.xml.gz
 
-bench: build-native build-lfi build-lfi-stores dbpl.xml
+bench: libxml2.csv
+
+libxml2.csv: build-native build-lfi build-lfi-stores dblp.xml
 	hyperfine --runs $(RUNS) --export-csv libxml2.csv \
 		-n 'LFI' 'lfi-run -- build-lfi/xmllint --noout dblp.xml' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/xmllint --noout dblp.xml' \

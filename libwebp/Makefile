@@ -37,12 +37,16 @@ image.png:
 image.webp: build-native image.png
 	build-native/cwebp -q 100 image.png -o image.webp
 
-bench: build-native build-lfi build-lfi-stores image.png image.webp
-	hyperfine --runs $(RUNS) --export-csv webpdecode.csv  \
+bench: webp-decode.csv webp-encode.csv
+
+webp-decode.csv: build-native build-lfi build-lfi-stores image.webp
+	hyperfine --runs $(RUNS) --export-csv webp-decode.csv  \
 		-n 'LFI' 'lfi-run -- build-lfi/dwebp image.webp -o /dev/null' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/dwebp image.webp -o /dev/null' \
 		-n 'Native' 'build-native/dwebp image.webp -o /dev/null'
-	hyperfine --runs $(RUNS) --export-csv webpencode.csv \
+
+webp-encode.csv: build-native build-lfi build-lfi-stores image.png
+	hyperfine --runs $(RUNS) --export-csv webp-encode.csv \
 		-n 'LFI' 'lfi-run -- build-lfi/cwebp image.png -o /dev/null' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/cwebp image.png -o /dev/null' \
 		-n 'Native' 'build-native/cwebp image.png -o /dev/null'

@@ -1,6 +1,7 @@
 TODO:
 -----
 -finish libxml2 by adding dup2 support to liblfi.
+-modify makefile to ensure that depednencies are built in proper order.
 
 other
 -----
@@ -29,6 +30,5 @@ libskia -- part of android-ish
 libvorbis -- " "
 libogg -- " "
 sonivox
-libtiff
 flac
 brotli

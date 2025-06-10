@@ -27,12 +27,14 @@ build-native: $(TARGET_DIR)
 	cmake -S $(TARGET_DIR) -B build-native -DCMAKE_TOOLCHAIN_FILE=../../toolchains/aarch64-native.cmake --install-prefix $(NATIVE_INSTALL)
 	cmake --build build-native -j $(JOBS)
 
-install: build-lfi build-lfi-stores build-lfi-native
+install: build-lfi build-lfi-stores build-native
 	cmake --install build-lfi
 	cmake --install build-lfi-stores
 	cmake --install build-native
 
-bench: build-native build-lfi build-lfi-stores
+bench: expat.csv
+
+expat.csv: build-native build-lfi build-lfi-stores
 	hyperfine --runs $(RUNS) --export-csv expat.csv \
 		-n 'LFI' 'lfi-run -- build-lfi/tests/runtests' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/tests/runtests' \

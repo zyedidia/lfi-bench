@@ -33,7 +33,9 @@ install:
 image.gif:
 	wget -O image.gif https://svs.gsfc.nasa.gov/vis/a010000/a014100/a014132/BHW_Binary_Black_Holes_Accretion_Disk.gif
 
-bench: build-native build-lfi build-lfi-stores image.gif
+bench: giftest.csv
+
+giftest.csv: build-native build-lfi build-lfi-stores image.gif
 	hyperfine --runs $(RUNS) --export-csv giftest.csv \
 		-n 'LFI' 'lfi-run -- build-lfi/gif2rgb image.gif > /dev/null' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/gif2rgb image.gif > /dev/null' \

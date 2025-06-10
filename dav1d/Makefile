@@ -23,8 +23,10 @@ build-native: dav1d
 	meson setup build-native dav1d --cross-file ../toolchains/aarch64-native.txt -Ddefault_library=static
 	ninja -C build-native
 
-bench: build-native build-lfi build-lfi-stores dav1d-benchdata
-	hyperfine --export-csv dav1d.csv --runs $(RUNS) --warmup $(WARMUP) \
+bench: dav1d.csv
+
+dav1d.csv: build-native build-lfi build-lfi-stores dav1d-benchdata
+	hyperfine --export-csv dav1d-decode.csv --runs $(RUNS) --warmup $(WARMUP) \
 		-n 'LFI' 'lfi-run -- build-lfi/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads 1' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads 1' \
 		-n 'Native' 'build-native/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads 1'

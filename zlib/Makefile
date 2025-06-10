@@ -45,13 +45,17 @@ build-benchmarks: build-lfi build-lfi-stores build-native
 	cmake --build build-lfi-bench --verbose
 	cmake --build build-lfi-stores-bench --verbose
 	cmake --build build-native-bench --verbose
+	touch $@
 
+bench: zlib-compress.csv zlib-decompress.csv
 
-bench: build-benchmarks bigfile.txt
+zlib-compress.csv: build-benchmarks bigfile.txt
 	hyperfine --warmup $(WARMUP) --export-csv zlib-compress.csv \
 		-n 'LFI' 'lfi-run -- build-lfi-bench/compress_file' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores-bench/compress_file' \
 		-n 'Native' 'build-native-bench/compress_file'
+
+zlib-decompress.csv: build-benchmarks bigfile.txt
 	hyperfine --warmup $(WARMUP) --export-csv zlib-decompress.csv \
 		-n 'LFI' 'lfi-run -- build-lfi-bench/decompress_file' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores-bench/decompress_file' \
@@ -63,4 +67,4 @@ clean:
 	rm -rf build-lfi build-lfi-stores build-native zlib
 	rm -rf build-lfi-bench build-lfi-stores-bench build-native-bench
 
-.PHONY: bench clean all
+.PHONY: clean 

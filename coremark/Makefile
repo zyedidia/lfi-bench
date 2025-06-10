@@ -18,7 +18,9 @@ build-native: coremark
 	LDFLAGS="-static-pie" meson setup build-native coremark --cross-file ../toolchains/aarch64-native.txt -Ddefault_library=static
 	ninja -C build-native
 
-bench: build-native build-lfi build-lfi-stores
+bench: coremark.csv
+
+coremark.csv: build-native build-lfi build-lfi-stores
 	hyperfine --export-csv coremark.csv --runs $(RUNS) --warmup $(WARMUP) \
 		-n 'LFI' 'lfi-run -- ./build-lfi/coremark 0x0 0x0 0x66 80000 7 1 2000' \
 		-n 'LFI-stores' 'lfi-run -- ./build-lfi-stores/coremark 0x0 0x0 0x66 80000 7 1 2000' \

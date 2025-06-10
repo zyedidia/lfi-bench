@@ -26,7 +26,7 @@ build-native: $(TARGET_DIR)
 	cmake -S $(TARGET_DIR) -B build-native -DCMAKE_TOOLCHAIN_FILE=../../toolchains/aarch64-native.cmake --install-prefix $(NATIVE_INSTALL)
 	cmake --build build-native -j $(JOBS)
 
-install: build-lfi build-lfi-stores build-lfi-native
+install: build-lfi build-lfi-stores build-native
 	cmake --install build-lfi
 	cmake --install build-lfi-stores
 	cmake --install build-native
@@ -34,7 +34,9 @@ install: build-lfi build-lfi-stores build-lfi-native
 image.png:
 	wget -O image.png https://svs.gsfc.nasa.gov/vis/a010000/a013000/a013043/frames/4096x2048_2x1_30p/Gaia/sub-warped-gaia-000000.png 
 
-bench: build-native build-lfi build-lfi-stores image.png
+bench: pngtest.csv
+
+pngtest.csv: build-native build-lfi build-lfi-stores image.png
 	cat image.png > /dev/null #pull it into buffer cache
 	hyperfine --runs $(RUNS) --export-csv pngtest.csv \
 		-n 'LFI' 'lfi-run -- build-lfi/pngtest image.png' \
