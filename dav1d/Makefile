@@ -1,9 +1,15 @@
+# Include shared configuration
+include ../common.mk
+
+# Benchmark-specific configuration
 RUNS   ?= 1
 WARMUP ?= 0
 
+TARGET_DIR := dav1d
+
 all: bench
 
-dav1d:
+$(TARGET_DIR):
 	git clone https://github.com/zyedidia/dav1d -b lfi
 
 dav1d-benchdata:
@@ -11,27 +17,28 @@ dav1d-benchdata:
 	tar -xf dav1d-benchdata.tar.gz
 	rm -f dav1d-benchdata.tar.gz
 
-build-lfi: dav1d
-	meson setup build-lfi dav1d --cross-file ../toolchains/aarch64-lfi.txt -Ddefault_library=static
+build-lfi: $(TARGET_DIR)
+	meson setup build-lfi $(TARGET_DIR) --cross-file $(LFI_MESON) -Ddefault_library=static
 	ninja -C build-lfi
 
-build-lfi-stores: dav1d
-	meson setup build-lfi-stores dav1d --cross-file ../toolchains/aarch64-lfi-stores.txt -Ddefault_library=static
+build-lfi-stores: $(TARGET_DIR)
+	meson setup build-lfi-stores $(TARGET_DIR) --cross-file $(STORES_MESON) -Ddefault_library=static
 	ninja -C build-lfi-stores
 
-build-native: dav1d
-	meson setup build-native dav1d --cross-file ../toolchains/aarch64-native.txt -Ddefault_library=static
+build-native: $(TARGET_DIR)
+	meson setup build-native $(TARGET_DIR) --cross-file $(NATIVE_MESON) -Ddefault_library=static
 	ninja -C build-native
 
 bench: dav1d.csv
 
 dav1d.csv: build-native build-lfi build-lfi-stores dav1d-benchdata
-	hyperfine --export-csv dav1d-decode.csv --runs $(RUNS) --warmup $(WARMUP) \
+	hyperfine --export-csv dav1d.csv --runs $(RUNS) --warmup $(WARMUP) \
 		-n 'LFI' 'lfi-run -- build-lfi/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads 1' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads 1' \
 		-n 'Native' 'build-native/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads 1'
 
 clean:
-	rm -rf build-native build-lfi build-lfi-stores dav1d-benchdata dav1d
+	rm -rf $(BUILD_DIRS) $(TARGET_DIR) dav1d-benchdata
+		rm -f *.csv
 
 .PHONY: all bench clean

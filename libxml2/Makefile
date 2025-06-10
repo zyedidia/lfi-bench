@@ -1,14 +1,12 @@
-RUNS   ?= 1 
+# Include shared configuration
+include ../common.mk
+
+# Benchmark-specific configuration
+RUNS   ?= 1
 WARMUP ?= 1
 
-JOBS := $(shell nproc)
-PARENT_DIR := $(shell dirname $(shell pwd))
-LFI_INSTALL := $(PARENT_DIR)/benchmark-lib/aarch64-lfi-clang/usr
-STORES_INSTALL := $(PARENT_DIR)/benchmark-lib/aarch64-lfi-stores-clang/usr
-NATIVE_INSTALL := $(PARENT_DIR)/benchmark-lib/aarch64-native-clang/usr
 CMAKE_FLAGS := -DLIBXML2_WITH_PYTHON=OFF
-
-TARGET_DIR:= libxml2
+TARGET_DIR := libxml2
 
 all: bench
 
@@ -19,15 +17,15 @@ $(TARGET_DIR):
 	rm -f libxml2.tar.xz
 
 build-lfi: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-lfi -DCMAKE_TOOLCHAIN_FILE=../../toolchains/aarch64-lfi.cmake --install-prefix $(LFI_INSTALL) $(CMAKE_FLAGS) 
+	cmake -S $(TARGET_DIR) -B build-lfi -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) --install-prefix $(LFI_INSTALL) $(CMAKE_FLAGS) 
 	cmake --build build-lfi -j $(JOBS)
 
 build-lfi-stores: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-lfi-stores -DCMAKE_TOOLCHAIN_FILE=../../toolchains/aarch64-lfi-stores.cmake --install-prefix $(STORES_INSTALL) $(CMAKE_FLAGS)
+	cmake -S $(TARGET_DIR) -B build-lfi-stores -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) --install-prefix $(STORES_INSTALL) $(CMAKE_FLAGS)
 	cmake --build build-lfi-stores -j $(JOBS)
 
 build-native: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-native -DCMAKE_TOOLCHAIN_FILE=../../toolchains/aarch64-native.cmake --install-prefix $(NATIVE_INSTALL) $(CMAKE_FLAGS)
+	cmake -S $(TARGET_DIR) -B build-native -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) --install-prefix $(NATIVE_INSTALL) $(CMAKE_FLAGS)
 	cmake --build build-native -j $(JOBS)
 
 install: build-lfi build-lfi-stores build-native
@@ -42,12 +40,13 @@ dbpl.xml:
 bench: libxml2.csv
 
 libxml2.csv: build-native build-lfi build-lfi-stores dblp.xml
-	hyperfine --runs $(RUNS) --export-csv libxml2.csv \
+	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv libxml2.csv \
 		-n 'LFI' 'lfi-run -- build-lfi/xmllint --noout dblp.xml' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/xmllint --noout dblp.xml' \
 		-n 'Native' 'build-native/xmllint --noout dblp.xml'
 
 clean:
-	rm -rf $(TARGET_DIR) build-native build-lfi build-lfi-stores dblp.xml
+	rm -rf $(BUILD_DIRS) $(TARGET_DIR) dblp.xml
+		rm -f *.csv
 
 .PHONY: all bench clean

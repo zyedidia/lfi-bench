@@ -1,14 +1,9 @@
+# Include shared configuration
+include ../common.mk
+
+# Benchmark-specific configuration
+RUNS   ?= 10
 WARMUP ?= 5
-
-JOBS := $(shell nproc)
-PARENT_DIR := $(shell dirname $(shell pwd))
-LFI_INSTALL := $(PARENT_DIR)/benchmark-lib/aarch64-lfi-clang/usr
-STORES_INSTALL := $(PARENT_DIR)/benchmark-lib/aarch64-lfi-stores-clang/usr
-NATIVE_INSTALL := $(PARENT_DIR)/benchmark-lib/aarch64-native-clang/usr
-
-LFI_TOOLCHAIN := ../../toolchains/aarch64-lfi.cmake
-STORES_TOOLCHAIN := ../../toolchains/aarch64-lfi-stores.cmake
-NATIVE_TOOLCHAIN := ../../toolchains/aarch64-native.cmake
 
 TARGET_DIR := zlib
 CMAKE_FLAGS := -DZLIB_BUILD_TESTING=off
@@ -50,13 +45,13 @@ build-benchmarks: build-lfi build-lfi-stores build-native
 bench: zlib-compress.csv zlib-decompress.csv
 
 zlib-compress.csv: build-benchmarks bigfile.txt
-	hyperfine --warmup $(WARMUP) --export-csv zlib-compress.csv \
+	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv zlib-compress.csv \
 		-n 'LFI' 'lfi-run -- build-lfi-bench/compress_file' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores-bench/compress_file' \
 		-n 'Native' 'build-native-bench/compress_file'
 
 zlib-decompress.csv: build-benchmarks bigfile.txt
-	hyperfine --warmup $(WARMUP) --export-csv zlib-decompress.csv \
+	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv zlib-decompress.csv \
 		-n 'LFI' 'lfi-run -- build-lfi-bench/decompress_file' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores-bench/decompress_file' \
 		-n 'Native' 'build-native-bench/decompress_file'
@@ -64,7 +59,7 @@ zlib-decompress.csv: build-benchmarks bigfile.txt
 clean:
 	rm -f *.csv
 	rm -f bigfile.txt bigfile.txt.gz bigfile_decompressed.txt
-	rm -rf build-lfi build-lfi-stores build-native zlib
+	rm -rf $(BUILD_DIRS) $(TARGET_DIR)
 	rm -rf build-lfi-bench build-lfi-stores-bench build-native-bench
 
 .PHONY: clean 

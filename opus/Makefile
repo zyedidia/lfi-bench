@@ -1,9 +1,15 @@
+# Include shared configuration
+include ../common.mk
+
+# Benchmark-specific configuration
 RUNS   ?= 5
 WARMUP ?= 2
 
+TARGET_DIR := opus
+
 all: bench
 
-opus:
+$(TARGET_DIR):
 	wget https://github.com/xiph/opus/releases/download/v1.5.2/opus-1.5.2.tar.gz
 	tar -xf opus-1.5.2.tar.gz
 	rm -f opus-1.5.2.tar.gz
@@ -14,16 +20,16 @@ opus-benchdata:
 	tar -xf opus-benchdata.tar.gz
 	rm -f opus-benchdata.tar.gz
 
-build-lfi: opus
-	LDFLAGS="-static-pie" meson setup build-lfi opus --cross-file ../toolchains/aarch64-lfi.txt -Ddefault_library=static
+build-lfi: $(TARGET_DIR)
+	LDFLAGS="-static-pie" meson setup build-lfi $(TARGET_DIR) --cross-file $(LFI_MESON) -Ddefault_library=static
 	ninja -C build-lfi
 
-build-lfi-stores: opus
-	LDFLAGS="-static-pie" meson setup build-lfi-stores opus --cross-file ../toolchains/aarch64-lfi-stores.txt -Ddefault_library=static
+build-lfi-stores: $(TARGET_DIR)
+	LDFLAGS="-static-pie" meson setup build-lfi-stores $(TARGET_DIR) --cross-file $(STORES_MESON) -Ddefault_library=static
 	ninja -C build-lfi-stores
 
-build-native: opus
-	LDFLAGS="-static-pie" meson setup build-native opus --cross-file ../toolchains/aarch64-native.txt -Ddefault_library=static
+build-native: $(TARGET_DIR)
+	LDFLAGS="-static-pie" meson setup build-native $(TARGET_DIR) --cross-file $(NATIVE_MESON) -Ddefault_library=static
 	ninja -C build-native
 
 bench: opus-encode.csv opus-decode.csv
@@ -41,6 +47,7 @@ opus-decode.csv: opus-benchdata build-native build-lfi build-lfi-stores
 		-n 'Native' './build-native/src/opus_demo -d 48000 2 opus-benchdata/music_orig.opus /dev/null'
 
 clean:
-	rm -rf opus opus-benchdata build-lfi build-lfi-stores build-native
+	rm -rf $(BUILD_DIRS) $(TARGET_DIR) opus-benchdata
+		rm -f *.csv
 
 .PHONY: all bench clean

@@ -1,9 +1,11 @@
+# Include shared configuration
+include ../common.mk
+
+# Benchmark-specific configuration
 RUNS   ?= 5
 WARMUP ?= 1
 
-JOBS := $(shell nproc)
-
-TARGET_DIR:= giflib
+TARGET_DIR := giflib
 
 $(TARGET_DIR):
 	wget -O giflib.tar.gz https://sourceforge.net/projects/giflib/files/giflib-5.2.2.tar.gz
@@ -36,12 +38,13 @@ image.gif:
 bench: giftest.csv
 
 giftest.csv: build-native build-lfi build-lfi-stores image.gif
-	hyperfine --runs $(RUNS) --export-csv giftest.csv \
+	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv giftest.csv \
 		-n 'LFI' 'lfi-run -- build-lfi/gif2rgb image.gif > /dev/null' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/gif2rgb image.gif > /dev/null' \
 		-n 'Native' 'build-native/gif2rgb image.gif > /dev/null'
 
 clean:
-	rm -rf $(TARGET_DIR) build-native build-lfi build-lfi-stores image.gif giflib.tar.gz
+	rm -rf $(BUILD_DIRS) $(TARGET_DIR) image.gif giflib.tar.gz
+		rm -f *.csv
 
 .PHONY: all bench clean

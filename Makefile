@@ -19,10 +19,6 @@ all:
 	@echo "  build-libs       - Build all dependency libraries"
 	@echo "  build-benchmarks - Build all benchmark applications"
 	@echo ""
-	@echo "Individual library targets:"
-	@echo "  build-zlib build-giflib build-libexpat build-libxml2"
-	@echo "  build-libpng build-libtiff build-libwebp"
-	@echo ""
 	@echo "Benchmarks: $(BENCH)"
 
 # Dependency-ordered library groups
@@ -94,28 +90,6 @@ build-benchmarks: build-libs
 			$(MAKE) -C $$bench build-lfi build-lfi-stores build-native ; \
 		fi; \
 	done
-
-# Individual library build targets (with dependencies)
-build-zlib:
-	$(MAKE) -C zlib build-lfi build-lfi-stores build-native install
-
-build-giflib:
-	$(MAKE) -C giflib build-lfi build-lfi-stores build-native install
-
-build-libexpat:
-	$(MAKE) -C libexpat build-lfi build-lfi-stores build-native install
-
-build-libxml2:
-	$(MAKE) -C libxml2 build-lfi build-lfi-stores build-native install
-
-build-libpng: build-zlib
-	$(MAKE) -C libpng build-lfi build-lfi-stores build-native install
-
-build-libtiff: build-zlib
-	$(MAKE) -C libtiff build-lfi build-lfi-stores build-native install
-
-build-libwebp: build-zlib build-libpng build-giflib build-libtiff
-	$(MAKE) -C libwebp build-lfi build-lfi-stores build-native install
 
 bench:
 	for bench in $(BENCH) ; do \

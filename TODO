@@ -1,7 +1,11 @@
 TODO:
 -----
 -finish libxml2 by adding dup2 support to liblfi.
--modify makefile to ensure that depednencies are built in proper order.
+
+Next:
+
+brotli
+ffmpeg (lots of formats)
 
 other
 -----
@@ -27,8 +31,4 @@ codecs
 ffmpeg -- lots of codecs, built in benchmarking, used by android apps but not a default
 libvips -- does dynamic code generation (liborc) and multithreading, will require some extra work
 libskia -- part of android-ish
-libvorbis -- " "
-libogg -- " "
 sonivox
-flac
-brotli
