@@ -22,7 +22,7 @@ all:
 	@echo "Benchmarks: $(BENCH)"
 
 # Dependency-ordered library groups
-LIBS_LEVEL_0 = zlib giflib libexpat 
+LIBS_LEVEL_0 = zlib giflib libexpat libxml2
 LIBS_LEVEL_1 = libpng
 LIBS_LEVEL_2 = libtiff libwebp
 
