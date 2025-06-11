@@ -33,20 +33,26 @@ install: build-lfi build-lfi-stores build-native
 	cmake --install build-lfi-stores
 	cmake --install build-native
 
-dbpl.xml:
-	wget https://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/dblp/dblp.xml.gz
-	gzip -d dblp.xml.gz
+build-benchmarks: build-lfi build-lfi-stores build-native
+	cmake -S benchmark -B build-lfi-bench -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) -DLIBXML2_DIR=../build-lfi
+	cmake -S benchmark -B build-lfi-stores-bench -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) -DLIBXML2_DIR=../build-lfi-stores  
+	cmake -S benchmark -B build-native-bench -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) -DLIBXML2_DIR=../build-native
+	cmake --build build-lfi-bench --verbose
+	cmake --build build-lfi-stores-bench --verbose
+	cmake --build build-native-bench --verbose
+	touch $@
 
 bench: libxml2.csv
 
-libxml2.csv: build-native build-lfi build-lfi-stores dblp.xml
+libxml2.csv: build-benchmarks 
 	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv libxml2.csv \
-		-n 'LFI' 'lfi-run -- build-lfi/xmllint --noout dblp.xml' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/xmllint --noout dblp.xml' \
-		-n 'Native' 'build-native/xmllint --noout dblp.xml'
+		-n 'LFI' 'lfi-run -- build-lfi-bench/xml-parse example.xml' \
+		-n 'LFI-stores' 'lfi-run -- build-lfi-stores-bench/xml-parse example.xml' \
+		-n 'Native' 'lfi-run -- build-native-bench/xml-parse example.xml'
 
 clean:
-	rm -rf $(BUILD_DIRS) $(TARGET_DIR) dblp.xml
-		rm -f *.csv
+	rm -rf $(BUILD_DIRS) $(TARGET_DIR)
+	rm -rf build-lfi-bench build-lfi-stores-bench build-native-bench
+	rm -f *.csv build-benchmarks
 
 .PHONY: all bench clean
