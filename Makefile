@@ -27,7 +27,7 @@ LIBS_LEVEL_1 = libpng
 LIBS_LEVEL_2 = libtiff libwebp
 
 # Standalone benchmarks without internal library dependencies
-BENCHMARKS = coremark dav1d fdk-aac libjpeg-turbo libvpx opus zstd libavc
+BENCHMARKS = coremark dav1d fdk-aac libjpeg-turbo libvpx opus zstd libavc libhevc
 
 # All libraries and benchmarks for CSV processing
 BENCH = $(BENCHMARKS) $(LIBS_LEVEL_0) $(LIBS_LEVEL_1) $(LIBS_LEVEL_2)
