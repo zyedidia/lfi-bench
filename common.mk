@@ -24,11 +24,3 @@ NATIVE_MESON := $(TOOLCHAIN_DIR)/aarch64-native.txt
 # Standard build directories
 BUILD_DIRS = build-lfi build-lfi-stores build-native
 
-# Define a function to check if CSV files exist and show informative message
-define csv_exists_msg
-@if [ -f $(1) ]; then \
-	echo "$(1) is up to date. Run 'rm $(1); make bench' to re-run."; \
-else \
-	echo "$(1) does not exist, will be generated."; \
-fi
-endef
