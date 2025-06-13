@@ -3,7 +3,7 @@ Cleanup/Finish
 
 -expat benchmark runs too long and is not representative, replace it.
 -libpng benchmark is dumb and runs too long.
--ioctl support in lfi runtime for brotli
+-ioctl support in lfi runtime for brotli, finish incorporating brotli.
 -libwepb runs too long.
 -check that inputs are large enough that user space costs are dominating...
 
