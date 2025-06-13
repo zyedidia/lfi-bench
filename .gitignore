@@ -1,3 +1,4 @@
+benchmark-lib
 *.csv
 !spec2017/*.csv
 !results/aarch64/m2/*.csv
@@ -6,4 +7,12 @@
 build-lfi
 build-lfi-stores
 build-native
-CLAUDE.md
+fdk-aac/fdk-aac/
+libavc/libavc/
+libexpat/expat
+libexpat/libexpat/
+libpng/image.png
+libpng/libpng/
+libtiff/libtiff/
+libxml2/libxml2/
+results/*

@@ -1,0 +1,16 @@
+# Source directory and archive
+giflib/
+giflib.tar.gz
+
+# Build directories
+build-*/
+
+# Test images
+*.gif
+image.gif
+
+# Performance data
+perf.data*
+
+# CSV results
+*.csv
