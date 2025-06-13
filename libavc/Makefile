@@ -17,15 +17,15 @@ test_download.mp4:
 	ffmpeg -f lavfi -i testsrc=duration=2:size=640x480:rate=30 -pix_fmt yuv420p -c:v libx264 -profile:v baseline -preset ultrafast test_download.mp4
 
 build-lfi: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-lfi -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) -DCMAKE_INSTALL_PREFIX=$(LFI_INSTALL)
+	cmake -S $(TARGET_DIR) -B build-lfi -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) -DCMAKE_INSTALL_PREFIX=$(LFI_INSTALL) -DCMAKE_BUILD_TYPE=Release
 	cmake --build build-lfi -j $(JOBS)
 
 build-lfi-stores: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-lfi-stores -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) -DCMAKE_INSTALL_PREFIX=$(STORES_INSTALL)
+	cmake -S $(TARGET_DIR) -B build-lfi-stores -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) -DCMAKE_INSTALL_PREFIX=$(STORES_INSTALL) -DCMAKE_BUILD_TYPE=Release
 	cmake --build build-lfi-stores -j $(JOBS)
 
 build-native: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-native -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) -DCMAKE_INSTALL_PREFIX=$(NATIVE_INSTALL)
+	cmake -S $(TARGET_DIR) -B build-native -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) -DCMAKE_INSTALL_PREFIX=$(NATIVE_INSTALL) -DCMAKE_BUILD_TYPE=Release
 	cmake --build build-native -j $(JOBS)
 
 install: build-lfi build-lfi-stores build-native
