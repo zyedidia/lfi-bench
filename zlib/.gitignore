@@ -1,2 +1,4 @@
-bigfile*
+bigfile.txt.gz
+bigfile_decompress.txt
+build*
 zlib

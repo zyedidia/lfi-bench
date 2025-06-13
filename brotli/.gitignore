@@ -1,0 +1,12 @@
+# Source directory
+brotli/
+
+# Build directories
+build-*/
+
+# Test files
+bigfile.txt.br
+bigfile_decompressed.txt
+
+# CSV results
+*.csv
