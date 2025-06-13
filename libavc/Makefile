@@ -12,10 +12,6 @@ all: bench
 $(TARGET_DIR):
 	git clone https://github.com/libpag/libavc.git
 
-# Generate test video file
-test_download.mp4:
-	ffmpeg -f lavfi -i testsrc=duration=2:size=640x480:rate=30 -pix_fmt yuv420p -c:v libx264 -profile:v baseline -preset ultrafast test_download.mp4
-
 build-lfi: $(TARGET_DIR)
 	cmake -S $(TARGET_DIR) -B build-lfi -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) -DCMAKE_INSTALL_PREFIX=$(LFI_INSTALL) -DCMAKE_BUILD_TYPE=Release
 	cmake --build build-lfi -j $(JOBS)
@@ -33,10 +29,13 @@ install: build-lfi build-lfi-stores build-native
 	cmake --install build-lfi-stores
 	cmake --install build-native
 
+test.mp4:
+	ffmpeg -f lavfi -i testsrc=duration=2:size=640x480:rate=30 -pix_fmt yuv420p -c:v libx264 -profile:v baseline -preset ultrafast test.mp4
+
 # Convert MP4 to raw H.264 bitstream for libavc decoder
-test.h264: test_download.mp4
+test.h264: test.mp4
 	# Extract H.264 bitstream from MP4 container for direct decoder testing
-	ffmpeg -i test_download.mp4 -c:v copy -bsf:v h264_mp4toannexb -f h264 test.h264
+	ffmpeg -i test.mp4 -c:v copy -bsf:v h264_mp4toannexb -f h264 test.h264
 
 bench: libavc-decode.csv
 
