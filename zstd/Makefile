@@ -24,9 +24,6 @@ build-native: $(TARGET_DIR)
 	meson setup build-native $(TARGET_DIR)/build/meson --cross-file $(NATIVE_MESON) -Ddefault_library=static
 	ninja -C build-native
 
-bigfile.txt:
-	tr -dc "A-Za-z 0-9" < /dev/urandom | fold -w100|head -n 100000 > bigfile.txt
-
 bench: build-native build-lfi-stores build-lfi bigfile.txt
 	mkdir -p /tmp/$(USER)
 	build-native/programs/zstd -f bigfile.txt -o bigfile.txt.zst
@@ -41,7 +38,7 @@ bench: build-native build-lfi-stores build-lfi bigfile.txt
 		-n 'Native' 'lfi-run -- build-native/programs/zstd -f bigfile.txt -o /tmp/$(USER)/test_native.zst'
 
 clean:
-	rm -f bigfile.txt bigfile.txt.zst *.csv
+	rm -f bigfile.txt.zst *.csv
 	rm -f /tmp/$(USER)/test_*.zst /tmp/$(USER)/test_*_out.txt
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR)
 
