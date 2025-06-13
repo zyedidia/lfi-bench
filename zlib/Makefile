@@ -3,7 +3,7 @@ include ../common.mk
 
 # Benchmark-specific configuration
 RUNS   ?= 10
-WARMUP ?= 5
+WARMUP ?= 1
 
 TARGET_DIR := zlib
 CMAKE_FLAGS := -DZLIB_BUILD_TESTING=off
@@ -30,9 +30,6 @@ install: build-lfi build-lfi-stores build-native
 	cmake --install build-lfi-stores
 	cmake --install build-native
 
-bigfile.txt:
-	tr -dc "A-Za-z 0-9" < /dev/urandom | fold -w100|head -n 100000 > bigfile.txt
-
 build-benchmarks: build-lfi build-lfi-stores build-native
 	cmake -S benchmark -B build-lfi-bench -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) -DZLIB_DIR=../build-lfi -DZLIB_INCLUDE=../zlib
 	cmake -S benchmark -B build-lfi-stores-bench -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) -DZLIB_DIR=../build-lfi-stores -DZLIB_INCLUDE=../zlib
@@ -58,7 +55,7 @@ zlib-decompress.csv: build-benchmarks bigfile.txt
 
 clean:
 	rm -f *.csv
-	rm -f bigfile.txt bigfile.txt.gz bigfile_decompressed.txt
+	rm -f bigfile.txt.gz bigfile_decompressed.txt build-benchmarks
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR)
 	rm -rf build-lfi-bench build-lfi-stores-bench build-native-bench
 
