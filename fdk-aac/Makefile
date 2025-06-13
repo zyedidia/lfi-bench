@@ -22,17 +22,17 @@ fdk-aac-benchdata:
 
 build-lfi: $(TARGET_DIR)
 	cmake -S $(TARGET_DIR) -B build-lfi -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) \
-		-DBUILD_PROGRAMS=ON -DBUILD_SHARED_LIBS=OFF
+		-DBUILD_PROGRAMS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
 	cmake --build build-lfi -j $(JOBS)
 
 build-lfi-stores: $(TARGET_DIR)
 	cmake -S $(TARGET_DIR) -B build-lfi-stores -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) \
-		-DBUILD_PROGRAMS=ON -DBUILD_SHARED_LIBS=OFF
+		-DBUILD_PROGRAMS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
 	cmake --build build-lfi-stores -j $(JOBS)
 
 build-native: $(TARGET_DIR)
 	cmake -S $(TARGET_DIR) -B build-native -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) \
-		-DBUILD_PROGRAMS=ON -DBUILD_SHARED_LIBS=OFF
+		-DBUILD_PROGRAMS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release
 	cmake --build build-native -j $(JOBS)
 
 bench: fdk-aac-encode.csv
