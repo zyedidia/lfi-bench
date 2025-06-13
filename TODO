@@ -1,9 +1,17 @@
-TODO:
+Cleanup/Finish
+--------------
+
+-expat benchmark runs too long
+-libpng benchmark is dumb and runs too long.
+-ioctl support in lfi runtime for brotli
+-libwepb runs too long.
+-check that inputs are large enough that user space costs are dominating...
+
+
+
+Next
 -----
 
-Next:
-
-brotli
 ffmpeg (lots of formats)
 
 other
