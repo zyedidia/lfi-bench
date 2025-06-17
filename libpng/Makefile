@@ -34,6 +34,12 @@ image.png:
 
 bench: pngtest.csv
 
+perf: build-native build-lfi build-lfi-stores image.png
+	mkdir -p perf
+	perf record -e cycles:u -g -o perf/libpng-lfi.perf.data lfi-run -p -- build-lfi/pngtest image.png
+	perf record -e cycles:u -g -o perf/libpng-lfi-stores.perf.data lfi-run -p -- build-lfi-stores/pngtest image.png
+	perf record -e cycles:u -g -o perf/libpng-native.perf.data build-native/pngtest image.png
+
 pngtest.csv: build-native build-lfi build-lfi-stores image.png
 	cat image.png > /dev/null #pull it into buffer cache
 	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv pngtest.csv \
@@ -43,6 +49,7 @@ pngtest.csv: build-native build-lfi build-lfi-stores image.png
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR) image.png
-		rm -f *.csv
+	rm -f *.csv
+	rm -rf perf
 
-.PHONY: all bench clean
+.PHONY: all bench clean perf

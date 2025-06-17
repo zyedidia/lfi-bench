@@ -41,6 +41,15 @@ build-benchmarks: build-lfi build-lfi-stores build-native
 
 bench: zlib-compress.csv zlib-decompress.csv
 
+perf: build-benchmarks bigfile.txt
+	mkdir -p perf
+	perf record -e cycles:u -g -o perf/zlib-compress-lfi.perf.data lfi-run -p -- build-lfi-bench/compress_file
+	perf record -e cycles:u -g -o perf/zlib-compress-lfi-stores.perf.data lfi-run -p -- build-lfi-stores-bench/compress_file
+	perf record -e cycles:u -g -o perf/zlib-compress-native.perf.data build-native-bench/compress_file
+	perf record -e cycles:u -g -o perf/zlib-decompress-lfi.perf.data lfi-run -p -- build-lfi-bench/decompress_file
+	perf record -e cycles:u -g -o perf/zlib-decompress-lfi-stores.perf.data lfi-run -p -- build-lfi-stores-bench/decompress_file
+	perf record -e cycles:u -g -o perf/zlib-decompress-native.perf.data build-native-bench/decompress_file
+
 zlib-compress.csv: build-benchmarks bigfile.txt
 	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv zlib-compress.csv \
 		-n 'LFI' 'lfi-run -- build-lfi-bench/compress_file' \
@@ -58,5 +67,6 @@ clean:
 	rm -f bigfile.txt.gz bigfile_decompressed.txt build-benchmarks
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR)
 	rm -rf build-lfi-bench build-lfi-stores-bench build-native-bench
+	rm -rf perf
 
-.PHONY: clean 
+.PHONY: clean perf 

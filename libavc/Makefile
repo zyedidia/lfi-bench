@@ -39,6 +39,12 @@ test.h264: test.mp4
 
 bench: libavc-decode.csv
 
+perf: build-lfi build-lfi-stores build-native test.h264 test.cfg
+	mkdir -p perf
+	perf record -e cycles:u -g -o perf/libavc-decode-lfi.perf.data lfi-run -p -- build-lfi/avcdec test.cfg
+	perf record -e cycles:u -g -o perf/libavc-decode-lfi-stores.perf.data lfi-run -p -- build-lfi-stores/avcdec test.cfg
+	perf record -e cycles:u -g -o perf/libavc-decode-native.perf.data build-native/avcdec test.cfg
+
 # Create decoder config file
 test.cfg: test.h264
 	@echo "--input test.h264" > test.cfg
@@ -65,5 +71,6 @@ libavc-decode.csv: build-lfi build-lfi-stores build-native test.h264 test.cfg
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR) test.h264 test_download.mp4 test.cfg
 	rm -f *.csv
+	rm -rf perf
 
-.PHONY: all bench clean install
+.PHONY: all bench clean install perf

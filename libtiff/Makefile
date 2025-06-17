@@ -112,10 +112,24 @@ libtiff-decode-packbits.csv: build-native build-lfi build-lfi-stores test_packbi
 # Run both encoding and decoding benchmarks
 bench: bench-encode bench-decode
 
+perf: build-lfi build-lfi-stores build-native test_uncompressed.tiff test_lzw.tiff test_zip.tiff test_packbits.tiff
+	mkdir -p perf
+	# Encoding performance profiling
+	cat test_uncompressed.tiff > /dev/null # pull into buffer cache
+	perf record -e cycles:u -g -o perf/libtiff-encode-lzw-lfi.perf.data lfi-run -p -- build-lfi/tools/tiffcp -c lzw test_uncompressed.tiff ./temp/perf_test_lfi_lzw.tiff
+	perf record -e cycles:u -g -o perf/libtiff-encode-lzw-lfi-stores.perf.data lfi-run -p -- build-lfi-stores/tools/tiffcp -c lzw test_uncompressed.tiff ./temp/perf_test_lfi_stores_lzw.tiff
+	perf record -e cycles:u -g -o perf/libtiff-encode-lzw-native.perf.data build-native/tools/tiffcp -c lzw test_uncompressed.tiff ./temp/perf_test_native_lzw.tiff
+	# Decoding performance profiling
+	cat test_lzw.tiff > /dev/null # pull into buffer cache
+	perf record -e cycles:u -g -o perf/libtiff-decode-lzw-lfi.perf.data lfi-run -p -- build-lfi/tools/tiffcp test_lzw.tiff ./temp/perf_test_lfi_decoded_lzw.tiff
+	perf record -e cycles:u -g -o perf/libtiff-decode-lzw-lfi-stores.perf.data lfi-run -p -- build-lfi-stores/tools/tiffcp test_lzw.tiff ./temp/perf_test_lfi_stores_decoded_lzw.tiff
+	perf record -e cycles:u -g -o perf/libtiff-decode-lzw-native.perf.data build-native/tools/tiffcp test_lzw.tiff ./temp/perf_test_native_decoded_lzw.tiff
+
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR) 
 	rm -f test_uncompressed.tiff test_lzw.tiff test_zip.tiff test_packbits.tiff test_base.tiff
 	rm -f libtiff-*.csv
 	rm -rf temp
+	rm -rf perf
 
-.PHONY: all bench clean install
+.PHONY: all bench clean install perf
