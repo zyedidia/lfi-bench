@@ -62,12 +62,6 @@ int main(int argc, char **argv) {
         printf("Empty document or no root element.\n");
     }
 
-    // Cleanup
-    xmlFreeDoc(doc);
-    xmlCleanupParser();
-    munmap(data, filesize);
-    close(fd);
-
     return EXIT_SUCCESS;
 }
 
