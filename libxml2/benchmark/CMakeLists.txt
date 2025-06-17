@@ -10,4 +10,4 @@ include_directories(${LIBXML2_DIR})
 add_executable(xml-parse xml-parse.c)
 
 # Link against libxml2
-target_link_libraries(xml-parse xml2)
+target_link_libraries(xml-parse xml2 mimalloc)

@@ -2,10 +2,10 @@
 include ../common.mk
 
 # Benchmark-specific configuration
-RUNS   ?= 1
+RUNS   ?= 3
 WARMUP ?= 1
 
-CMAKE_FLAGS := -DLIBXML2_WITH_PYTHON=OFF
+CMAKE_FLAGS := -DLIBXML2_WITH_PYTHON=OFF -DCMAKE_BUILD_TYPE=Release
 TARGET_DIR := libxml2
 
 all: bench
@@ -17,15 +17,15 @@ $(TARGET_DIR):
 	rm -f libxml2.tar.xz
 
 build-lfi: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-lfi -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) --install-prefix $(LFI_INSTALL) $(CMAKE_FLAGS) -DCMAKE_BUILD_TYPE=Release
+	cmake -S $(TARGET_DIR) -B build-lfi -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) --install-prefix $(LFI_INSTALL) $(CMAKE_FLAGS)
 	cmake --build build-lfi -j $(JOBS)
 
 build-lfi-stores: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-lfi-stores -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) --install-prefix $(STORES_INSTALL) $(CMAKE_FLAGS) -DCMAKE_BUILD_TYPE=Release
+	cmake -S $(TARGET_DIR) -B build-lfi-stores -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) --install-prefix $(STORES_INSTALL) $(CMAKE_FLAGS)
 	cmake --build build-lfi-stores -j $(JOBS)
 
 build-native: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-native -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) --install-prefix $(NATIVE_INSTALL) $(CMAKE_FLAGS) -DCMAKE_BUILD_TYPE=Release
+	cmake -S $(TARGET_DIR) -B build-native -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) --install-prefix $(NATIVE_INSTALL) $(CMAKE_FLAGS)
 	cmake --build build-native -j $(JOBS)
 
 install: build-lfi build-lfi-stores build-native
@@ -46,9 +46,9 @@ bench: libxml2.csv
 
 libxml2.csv: build-benchmarks 
 	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv libxml2.csv \
-		-n 'LFI' 'lfi-run -- build-lfi-bench/xml-parse example.xml' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores-bench/xml-parse example.xml' \
-		-n 'Native' 'lfi-run -- build-native-bench/xml-parse example.xml'
+		-n 'LFI' '/opt/lfi/new/bin/lfi-run -u -- build-lfi-bench/xml-parse SwissProt.xml' \
+		-n 'LFI-stores' '/opt/lfi/new/bin/lfi-run -u -- build-lfi-stores-bench/xml-parse SwissProt.xml' \
+		-n 'Native' 'build-native-bench/xml-parse SwissProt.xml'
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR)
