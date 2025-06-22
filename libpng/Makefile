@@ -29,6 +29,15 @@ install: build-lfi build-lfi-stores build-native
 	cmake --install build-lfi-stores
 	cmake --install build-native
 
+build-benchmarks: build-lfi build-lfi-stores build-native
+	cmake -S benchmark -B build-lfi-bench -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) -DLIB_DIR=../build-lfi
+	cmake -S benchmark -B build-lfi-stores-bench -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) -DLIB_DIR=../build-lfi-stores
+	cmake -S benchmark -B build-native-bench -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) -DLIB_DIR=../build-native
+	cmake --build build-lfi-bench --verbose
+	cmake --build build-lfi-stores-bench --verbose
+	cmake --build build-native-bench --verbose
+	touch $@
+
 image.png:
 	wget -O image.png https://svs.gsfc.nasa.gov/vis/a010000/a013000/a013043/frames/4096x2048_2x1_30p/Gaia/sub-warped-gaia-000000.png 
 
