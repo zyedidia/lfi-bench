@@ -1,6 +1,9 @@
 Cleanup/Finish
 --------------
 
+-add multiple core support to shield
+-turning on threading in benchmarks.
+
 -expat benchmark runs too long and is not representative, replace it.
 -libpng benchmark is dumb and runs too long.
 -add ioctl support in lfi runtime for brotli, finish incorporating brotli.
