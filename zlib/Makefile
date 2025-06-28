@@ -43,12 +43,12 @@ bench: zlib-compress.csv zlib-decompress.csv
 
 perf: build-benchmarks bigfile.txt
 	mkdir -p perf
-	perf record -e cycles:u -g -o perf/zlib-compress-lfi.perf.data lfi-run -p -- build-lfi-bench/compress_file
-	perf record -e cycles:u -g -o perf/zlib-compress-lfi-stores.perf.data lfi-run -p -- build-lfi-stores-bench/compress_file
-	perf record -e cycles:u -g -o perf/zlib-compress-native.perf.data build-native-bench/compress_file
-	perf record -e cycles:u -g -o perf/zlib-decompress-lfi.perf.data lfi-run -p -- build-lfi-bench/decompress_file
-	perf record -e cycles:u -g -o perf/zlib-decompress-lfi-stores.perf.data lfi-run -p -- build-lfi-stores-bench/decompress_file
-	perf record -e cycles:u -g -o perf/zlib-decompress-native.perf.data build-native-bench/decompress_file
+	perf record -e cycles:u -g -o perf/zlib-compress-lfi.perf lfi-run --perf -- build-lfi-bench/compress_file
+	perf record -e cycles:u -g -o perf/zlib-compress-lfi-stores.perf lfi-run --perf -- build-lfi-stores-bench/compress_file
+	perf record -e cycles:u -g -o perf/zlib-compress-native.perf build-native-bench/compress_file
+	perf record -e cycles:u -g -o perf/zlib-decompress-lfi.perf lfi-run --perf -- build-lfi-bench/decompress_file
+	perf record -e cycles:u -g -o perf/zlib-decompress-lfi-stores.perf lfi-run --perf -- build-lfi-stores-bench/decompress_file
+	perf record -e cycles:u -g -o perf/zlib-decompress-native.perf build-native-bench/decompress_file
 
 zlib-compress.csv: build-benchmarks bigfile.txt
 	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv zlib-compress.csv \

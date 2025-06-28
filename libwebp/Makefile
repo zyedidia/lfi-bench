@@ -49,8 +49,18 @@ webp-encode.csv: build-native build-lfi build-lfi-stores image.png
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/cwebp image.png -o /dev/null' \
 		-n 'Native' 'build-native/cwebp image.png -o /dev/null'
 
+perf: build-lfi build-lfi-stores build-native image.webp image.png
+	mkdir -p perf
+	perf record -e cycles:u -g -o perf/webp-decode-lfi.perf 	lfi-run --perf -- build-lfi/dwebp image.webp -o /dev/null
+	perf record -e cycles:u -g -o perf/webp-decode-lfi-stores.perf 	lfi-run --perf -- build-lfi-stores/dwebp image.webp -o /dev/null
+	perf record -e cycles:u -g -o perf/webp-decode-native.perf build-native/dwebp image.webp -o /dev/null
+	perf record -e cycles:u -g -o perf/webp-encode-lfi.perf 	lfi-run --perf -- build-lfi/cwebp image.png -o /dev/null
+	perf record -e cycles:u -g -o perf/webp-encode-lfi-stores.perf 	lfi-run --perf -- build-lfi-stores/cwebp image.png -o /dev/null
+	perf record -e cycles:u -g -o perf/webp-encode-native.perf build-native/cwebp image.png -o /dev/null
+
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR) image.png image.webp
 		rm -f *.csv
+	rm -rf perf
 
-.PHONY: all bench clean
+.PHONY: all bench clean perf

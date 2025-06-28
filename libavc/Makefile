@@ -41,9 +41,9 @@ bench: libavc-decode.csv
 
 perf: build-lfi build-lfi-stores build-native test.h264 test.cfg
 	mkdir -p perf
-	perf record -e cycles:u -g -o perf/libavc-decode-lfi.perf.data lfi-run -p -- build-lfi/avcdec test.cfg
-	perf record -e cycles:u -g -o perf/libavc-decode-lfi-stores.perf.data lfi-run -p -- build-lfi-stores/avcdec test.cfg
-	perf record -e cycles:u -g -o perf/libavc-decode-native.perf.data build-native/avcdec test.cfg
+	perf record -e cycles:u -g -o perf/libavc-decode-lfi.perf lfi-run --perf -- build-lfi/avcdec test.cfg
+	perf record -e cycles:u -g -o perf/libavc-decode-lfi-stores.perf lfi-run --perf -- build-lfi-stores/avcdec test.cfg
+	perf record -e cycles:u -g -o perf/libavc-decode-native.perf build-native/avcdec test.cfg
 
 # Create decoder config file
 test.cfg: test.h264
