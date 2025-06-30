@@ -49,8 +49,8 @@ zlib-compress.csv: build-benchmarks bigfile.txt
 
 zlib-decompress.csv: build-benchmarks bigfile.txt
 	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv zlib-decompress.csv \
-		-n 'LFI' 'lfi-run -- build-lfi-bench/decompress_file' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores-bench/decompress_file' \
+		-n 'LFI' 'lfi-run -p -- build-lfi-bench/decompress_file' \
+		-n 'LFI-stores' 'lfi-run -p -- build-lfi-stores-bench/decompress_file' \
 		-n 'Native' 'build-native-bench/decompress_file'
 
 clean:

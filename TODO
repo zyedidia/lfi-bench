@@ -3,12 +3,38 @@ Cleanup/Finish
 
 -add multiple core support to shield
 -turning on threading in benchmarks.
+-add install target for libjpeg
+-add freetype and enable in skia
 
 -expat benchmark runs too long and is not representative, replace it.
 -libpng benchmark is dumb and runs too long.
 -add ioctl support in lfi runtime for brotli, finish incorporating brotli.
 -libwepb runs too long.
 -check that inputs are large enough that user space costs are and not being amoritized.
+
+Move to LFI_ROOT
+---------------
+make all tool paths relative to LFI_ROOT
+if enviroment variable set, use that, otherwise default to LFI_ROOT in lfi-bench
+add script to pull and uncompress latest lfi-release.
+
+Migrate to New runtime
+----------------------
+-Fix flags
+-include runtime as git submodule
+-change lfi-run calls to refer to locally installed
+
+Integration Test Support:
+------------------------
+-test if build fails
+-input validation (test that output is correct) - make validate
+-run verifier (test that binaries verify without errors) - make verify (for compiler development)
+-lfi-bind tests
+-add sanitizer tests
+-add PAC/MTE tests
+
+Setup Github workflow to run once a day/on demand
+-----------------------------------
 
 
 Next
