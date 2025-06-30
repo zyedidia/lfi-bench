@@ -54,14 +54,14 @@ build-native/decode-benchmark: build-native decode-benchmark.cpp
 		decode-benchmark.cpp -lskia -ljpeg -lwebpdemux -lwebp -lpng -lz -lpthread -ldl -lm \
 		-o build-native/decode-benchmark
 
-bench: skia.csv
+bench: skia-decode-jpg-png.csv
 
-skia.csv: build-native/decode-benchmark build-lfi/decode-benchmark build-lfi-stores/decode-benchmark
+skia-decode-jpg-png.csv: build-native/decode-benchmark build-lfi/decode-benchmark build-lfi-stores/decode-benchmark
 	cat image.* > /dev/null
-	hyperfine --export-csv skia.csv --runs $(RUNS) --warmup $(WARMUP) \
-		-n 'LFI' 'lfi-run -p -- ./build-lfi/decode-benchmark 4' \
-		-n 'LFI-stores' 'lfi-run -p -- ./build-lfi-stores/decode-benchmark 4' \
-		-n 'Native' './build-native/decode-benchmark 4'
+	hyperfine --export-csv skia-decode-jpg-png.csv --runs $(RUNS) --warmup $(WARMUP) \
+		-n 'LFI' 'lfi-run -p -- ./build-lfi/decode-benchmark 10' \
+		-n 'LFI-stores' 'lfi-run -p -- ./build-lfi-stores/decode-benchmark 10' \
+		-n 'Native' './build-native/decode-benchmark 10'
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR)
