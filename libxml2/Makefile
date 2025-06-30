@@ -46,8 +46,8 @@ bench: libxml2.csv
 
 libxml2.csv: build-benchmarks 
 	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv libxml2.csv \
-		-n 'LFI' '/opt/lfi/new/bin/lfi-run -u -- build-lfi-bench/xml-parse SwissProt.xml' \
-		-n 'LFI-stores' '/opt/lfi/new/bin/lfi-run -u -- build-lfi-stores-bench/xml-parse SwissProt.xml' \
+		-n 'LFI' 'lfi-run -p -- build-lfi-bench/xml-parse SwissProt.xml' \
+		-n 'LFI-stores' 'lfi-run -p -- build-lfi-stores-bench/xml-parse SwissProt.xml' \
 		-n 'Native' 'build-native-bench/xml-parse SwissProt.xml'
 
 clean:
