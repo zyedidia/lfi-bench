@@ -2,8 +2,8 @@
 include ../common.mk
 
 # Benchmark-specific configuration
-RUNS ?= 20
-WARMUP ?= 5
+RUNS ?= 5
+WARMUP ?= 0
 
 TARGET_DIR := zstd
 
@@ -31,11 +31,11 @@ bench: build-native build-lfi-stores build-lfi bigfile.txt
 		-n 'LFI' 'lfi-run -- build-lfi/programs/zstd -df bigfile.txt.zst -o /tmp/$(USER)/test_lfi_out.txt' \
 		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/programs/zstd -df bigfile.txt.zst -o /tmp/$(USER)/test_lfi_stores_out.txt' \
 		-n 'Native' 'lfi-run -- build-native/programs/zstd -df bigfile.txt.zst -o /tmp/$(USER)/test_native_out.txt'
-	mkdir -p /tmp/$(USER)
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv zstd-compress.csv \
-		-n 'LFI' 'lfi-run -- build-lfi/programs/zstd -f bigfile.txt -o /tmp/$(USER)/test_lfi.zst' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/programs/zstd -f bigfile.txt -o /tmp/$(USER)/test_lfi_stores.zst' \
-		-n 'Native' 'lfi-run -- build-native/programs/zstd -f bigfile.txt -o /tmp/$(USER)/test_native.zst'
+	# mkdir -p /tmp/$(USER)
+	# # hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv zstd-compress.csv \
+	# # 	-n 'LFI' 'lfi-run -- build-lfi/programs/zstd -f bigfile.txt -o /tmp/$(USER)/test_lfi.zst' \
+	# # 	-n 'LFI-stores' 'lfi-run -- build-lfi-stores/programs/zstd -f bigfile.txt -o /tmp/$(USER)/test_lfi_stores.zst' \
+	# # 	-n 'Native' 'lfi-run -- build-native/programs/zstd -f bigfile.txt -o /tmp/$(USER)/test_native.zst'
 
 clean:
 	rm -f bigfile.txt.zst *.csv
