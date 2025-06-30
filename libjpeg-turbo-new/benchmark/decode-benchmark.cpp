@@ -1,3 +1,5 @@
+//This is a poor test of libjpeg turbo overhead
+//but demonstrates so high C++ induced overheads.
 #include <turbojpeg.h>
 #include <iostream>
 #include <fstream>

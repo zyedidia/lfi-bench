@@ -2,7 +2,7 @@
 include ../common.mk
 
 # Benchmark-specific configuration
-RUNS   ?= 3
+RUNS   ?= 1
 WARMUP ?= 0
 
 TARGET_DIR := libjpeg-turbo
@@ -38,18 +38,20 @@ build-benchmarks: build-lfi build-lfi-stores build-native
 	cmake --build build-native-bench --verbose
 	touch $@
 
-bench: libjpeg-turbo.csv
+bench: libjpeg-decode.csv
 
-libjpeg-turbo.csv: build-benchmarks
+decode-bench: libjpeg-decode.csv
+
+libjpeg-decode.csv: build-benchmarks
 	cat image.jpg test.jpeg > /dev/null
-	hyperfine --export-csv libjpeg-turbo.csv --runs $(RUNS) --warmup $(WARMUP) \
-		-n 'LFI' 'lfi-run -p -- ./build-lfi-bench/decode-benchmark 10' \
-		-n 'LFI-stores' 'lfi-run -p -- ./build-lfi-stores-bench/decode-benchmark 10' \
-		-n 'Native' './build-native-bench/decode-benchmark 10'
+	hyperfine --export-csv libjpeg-decode.csv --runs $(RUNS) --warmup $(WARMUP) \
+		-n 'LFI' 'lfi-run -p -- ./build-lfi-bench/decode-benchmark 100' \
+		-n 'LFI-stores' 'lfi-run -p -- ./build-lfi-stores-bench/decode-benchmark 100' \
+		-n 'Native' './build-native-bench/decode-benchmark 100'
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR)
 	rm -rf build-lfi-bench build-lfi-stores-bench build-native-bench
 	rm -f *.csv build-benchmarks
 
-.PHONY: all bench clean install
+.PHONY: all bench clean install decode-bench
