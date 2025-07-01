@@ -1,7 +1,6 @@
 Cleanup/Finish
 --------------
 
--add multiple core support to shield
 -turning on threading in benchmarks.
 -add freetype and enable in skia
 
