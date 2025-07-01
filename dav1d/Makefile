@@ -33,9 +33,9 @@ bench: dav1d.csv
 
 dav1d.csv: build-native build-lfi build-lfi-stores dav1d-benchdata
 	hyperfine --export-csv dav1d.csv --runs $(RUNS) --warmup $(WARMUP) \
-		-n 'LFI' 'lfi-run -- build-lfi/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads 1' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads 1' \
-		-n 'Native' 'build-native/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads 1'
+		-n 'LFI' 'lfi-run -p -- build-lfi/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads=$(THREADS)' \
+		-n 'LFI-stores' 'lfi-run -p -- build-lfi-stores/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads=$(THREADS)' \
+		-n 'Native' 'build-native/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads $(THREADS)'
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR) dav1d-benchdata

@@ -3,6 +3,9 @@
 # Build configuration (benchmark-specific RUNS/WARMUP stay in individual Makefiles)
 JOBS := $(shell nproc)
 
+#how many threads to use in benchmarks
+THREADS := 2
+
 # Directory structure
 PARENT_DIR := $(shell dirname $(shell pwd))
 BENCH_LIB := $(PARENT_DIR)/benchmark-lib
@@ -24,3 +27,5 @@ NATIVE_MESON := $(TOOLCHAIN_DIR)/aarch64-native.txt
 # Standard build directories
 BUILD_DIRS = build-lfi build-lfi-stores build-native
 
+reset:
+	rm *.csv
