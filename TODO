@@ -11,6 +11,11 @@ Cleanup/Finish
 -check that inputs are large enough that user space costs are and not being amoritized.
 -zst decompress benchmark has too much system time, not enough user, needs to be fixed. compress runs to long, need to fix.
 
+
+Microbenchmarks
+---------------
+-bulk memory operations.
+
 Move to LFI_ROOT
 ---------------
 make all tool paths relative to LFI_ROOT
@@ -27,7 +32,7 @@ Integration Test Support:
 -test if build fails
 -input validation (test that output is correct) - make validate
 -run verifier (test that binaries verify without errors) - make verify (for compiler development)
--lfi-bind tests
+-lfi-bind tests (maybe in lfi-bind instead?)
 -add sanitizer tests
 -add PAC/MTE tests
 

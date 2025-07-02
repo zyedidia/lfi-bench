@@ -38,6 +38,9 @@ build-benchmarks: build-lfi build-lfi-stores build-native
 	cmake --build build-native-bench --verbose
 	touch $@
 
+build-integrate: build-lfi
+	$(MAKE) -C integrate all
+
 bench: libjpeg-decode.csv
 
 decode-bench: libjpeg-decode.csv
@@ -53,5 +56,3 @@ clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR)
 	rm -rf build-lfi-bench build-lfi-stores-bench build-native-bench
 	rm -f *.csv build-benchmarks
-
-.PHONY: all bench clean install decode-bench
