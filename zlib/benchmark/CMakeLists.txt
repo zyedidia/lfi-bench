@@ -10,5 +10,5 @@ add_executable(compress_file compress_file.c)
 add_executable(decompress_file decompress_file.c)
 
 # Link both against the static zlib
-target_link_libraries(compress_file z)
-target_link_libraries(decompress_file z)
+target_link_libraries(compress_file -static-pie z)
+target_link_libraries(decompress_file -static-pie z)
