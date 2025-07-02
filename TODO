@@ -1,8 +1,8 @@
 Cleanup/Finish
 --------------
 
--turning on threading in benchmarks.
 -add freetype and enable in skia
+-cleanup how skia builds benchmarks
 
 -do a full run to check that runtime updates work.
 -expat benchmark runs too long and is not representative, replace it.
@@ -63,7 +63,5 @@ liblzma, bzip2, liblz4, minizip,snappy,libarchive
 
 codecs
 --------
-ffmpeg -- lots of codecs, built in benchmarking, used by android apps but not a default
 libvips -- does dynamic code generation (liborc) and multithreading, will require some extra work
-libskia -- part of android-ish
 sonivox

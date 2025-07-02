@@ -4,7 +4,7 @@
 JOBS := $(shell nproc)
 
 #how many threads to use in benchmarks
-THREADS := 2
+THREADS := 1
 
 # Directory structure
 PARENT_DIR := $(shell dirname $(shell pwd))
@@ -27,5 +27,14 @@ NATIVE_MESON := $(TOOLCHAIN_DIR)/aarch64-native.txt
 # Standard build directories
 BUILD_DIRS = build-lfi build-lfi-stores build-native
 
+# Default target - should be overridden in individual Makefiles
+.DEFAULT_GOAL := help
+
+help:
+	@echo "Available targets depend on the specific benchmark"
+	@echo "Common targets: bench, clean, reset"
+
 reset:
 	rm *.csv
+
+.PHONY: help reset

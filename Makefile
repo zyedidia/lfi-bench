@@ -24,7 +24,10 @@ all:
 # Dependency-ordered library groups
 LIBS_LEVEL_0 = zlib giflib libexpat libxml2 libjpeg-turbo
 LIBS_LEVEL_1 = libpng
-LIBS_LEVEL_2 = libtiff libwebp skia
+LIBS_LEVEL_2 = libtiff libwebp skia freetype
+
+#XXX kind of a lie as skia depends on freetype but ok because of build order
+
 
 # Standalone benchmarks without internal library dependencies or dependants
 BENCHMARKS = coremark dav1d fdk-aac libvpx opus zstd libavc libhevc

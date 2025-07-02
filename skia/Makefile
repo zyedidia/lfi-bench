@@ -6,7 +6,7 @@ RUNS   ?= 1
 WARMUP ?= 0
 
 TARGET_DIR := skia
-SKIA_FLAGS=skia_enable_tools=false skia_enable_skottie=false skia_enable_svg=false skia_enable_fontmgr_fontconfig=false skia_enable_fontmgr_android=false skia_use_fontconfig=false skia_use_freetype=false skia_enable_fontmgr_empty=true skia_enable_gpu=false skia_enable_pdf=false skia_use_harfbuzz=false skia_use_icu=false skia_enable_pdf=false skia_enable_svg=false
+SKIA_FLAGS=skia_enable_tools=false skia_enable_skottie=false skia_enable_svg=false skia_enable_fontmgr_fontconfig=false skia_enable_fontmgr_android=false skia_use_fontconfig=false skia_use_freetype=true skia_enable_fontmgr_empty=true skia_enable_gpu=false skia_enable_pdf=false skia_use_harfbuzz=false skia_use_icu=false skia_enable_pdf=false skia_enable_svg=false is_official_build=true skia_use_system_zlib=true skia_use_system_libpng=true
 
 all: bench
 
@@ -17,19 +17,19 @@ $(TARGET_DIR):
 build-lfi: $(TARGET_DIR)
 	cd $(TARGET_DIR) && \
 		PKG_CONFIG_PATH="$(LFI_INSTALL)/lib/pkgconfig:$(LFI_INSTALL)/lib64/pkgconfig" \
-		bin/gn gen ../build-lfi --args='target_cpu="arm64" cc="/opt/aarch64-lfi-clang/bin/clang" cxx="/opt/aarch64-lfi-clang/bin/clang++" ar="/opt/aarch64-lfi-clang/bin/llvm-ar" is_official_build=true skia_use_system_zlib=true skia_use_system_libpng=true extra_cflags=["-I$(LFI_INSTALL)/include"] extra_ldflags=["-L$(LFI_INSTALL)/lib","-L$(LFI_INSTALL)/lib64","-static-pie"] $(SKIA_FLAGS)' && \
+		bin/gn gen ../build-lfi --args='target_cpu="arm64" cc="/opt/aarch64-lfi-clang/bin/clang" cxx="/opt/aarch64-lfi-clang/bin/clang++" ar="/opt/aarch64-lfi-clang/bin/llvm-ar" extra_cflags=["-I$(LFI_INSTALL)/include"] extra_ldflags=["-L$(LFI_INSTALL)/lib","-L$(LFI_INSTALL)/lib64","-static-pie"] $(SKIA_FLAGS)' && \
 		cd ../build-lfi && ninja
 
 build-lfi-stores: $(TARGET_DIR)
 	cd $(TARGET_DIR) && \
 		PKG_CONFIG_PATH="$(STORES_INSTALL)/lib/pkgconfig:$(STORES_INSTALL)/lib64/pkgconfig" \
-		bin/gn gen ../build-lfi-stores --args='target_cpu="arm64" cc="/opt/aarch64-lfi-stores-clang/bin/clang" cxx="/opt/aarch64-lfi-stores-clang/bin/clang++" ar="/opt/aarch64-lfi-stores-clang/bin/llvm-ar" is_official_build=true skia_use_system_zlib=true skia_use_system_libpng=true extra_cflags=["-I$(STORES_INSTALL)/include"] extra_ldflags=["-L$(STORES_INSTALL)/lib","-L$(STORES_INSTALL)/lib64","-static-pie"] $(SKIA_FLAGS)' && \
+		bin/gn gen ../build-lfi-stores --args='target_cpu="arm64" cc="/opt/aarch64-lfi-stores-clang/bin/clang" cxx="/opt/aarch64-lfi-stores-clang/bin/clang++" ar="/opt/aarch64-lfi-stores-clang/bin/llvm-ar" extra_cflags=["-I$(STORES_INSTALL)/include"] extra_ldflags=["-L$(STORES_INSTALL)/lib","-L$(STORES_INSTALL)/lib64","-static-pie"] $(SKIA_FLAGS)' && \
 		cd ../build-lfi-stores && ninja
 
 build-native: $(TARGET_DIR)
 	cd $(TARGET_DIR) && \
 		PKG_CONFIG_PATH="$(NATIVE_INSTALL)/lib/pkgconfig:$(NATIVE_INSTALL)/lib64/pkgconfig" \
-		bin/gn gen ../build-native --args='target_cpu="arm64" cc="/opt/aarch64-native-clang/bin/clang" cxx="/opt/aarch64-native-clang/bin/clang++" ar="/opt/aarch64-native-clang/bin/llvm-ar" is_official_build=true skia_use_system_zlib=true skia_use_system_libpng=true extra_cflags=["-I$(NATIVE_INSTALL)/include"] extra_ldflags=["-L$(NATIVE_INSTALL)/lib","-L$(NATIVE_INSTALL)/lib64","-static-pie"] $(SKIA_FLAGS)' && \
+		bin/gn gen ../build-native --args='target_cpu="arm64" cc="/opt/aarch64-native-clang/bin/clang" cxx="/opt/aarch64-native-clang/bin/clang++" ar="/opt/aarch64-native-clang/bin/llvm-ar" extra_cflags=["-I$(NATIVE_INSTALL)/include"] extra_ldflags=["-L$(NATIVE_INSTALL)/lib","-L$(NATIVE_INSTALL)/lib64","-static-pie"] $(SKIA_FLAGS)' && \
 		cd ../build-native && ninja
 
 # Build benchmark executables
