@@ -39,8 +39,8 @@ bench: fdk-aac-encode.csv
 
 fdk-aac-encode.csv: fdk-aac-benchdata build-native build-lfi build-lfi-stores
 	hyperfine --export-csv fdk-aac-encode.csv --runs $(RUNS) --warmup $(WARMUP) \
-		-n 'LFI' 'lfi-run -- ./build-lfi/aac-enc -r 128000 fdk-aac-benchdata/music_medium.wav /dev/null' \
-		-n 'LFI-stores' 'lfi-run -- ./build-lfi-stores/aac-enc -r 128000 fdk-aac-benchdata/music_medium.wav /dev/null' \
+		-n 'LFI' 'lfi-run -p -- ./build-lfi/aac-enc -r 128000 fdk-aac-benchdata/music_medium.wav /dev/null' \
+		-n 'LFI-stores' 'lfi-run -p -- ./build-lfi-stores/aac-enc -r 128000 fdk-aac-benchdata/music_medium.wav /dev/null' \
 		-n 'Native' './build-native/aac-enc -r 128000 fdk-aac-benchdata/music_medium.wav /dev/null'
 
 clean:
