@@ -1,7 +1,6 @@
 Cleanup/Finish
 --------------
 
--add freetype and enable in skia
 -cleanup how skia builds benchmarks
 
 -do a full run to check that runtime updates work.
@@ -20,7 +19,6 @@ add script to pull and uncompress latest lfi-release.
 
 Migrate to New runtime
 ----------------------
--Fix flags
 -include runtime as git submodule
 -change lfi-run calls to refer to locally installed
 
