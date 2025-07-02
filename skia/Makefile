@@ -6,7 +6,7 @@ RUNS   ?= 1
 WARMUP ?= 0
 
 TARGET_DIR := skia
-SKIA_FLAGS=skia_enable_tools=false skia_enable_skottie=false skia_enable_svg=false skia_enable_fontmgr_fontconfig=false skia_enable_fontmgr_android=false skia_use_fontconfig=false skia_use_freetype=true skia_enable_fontmgr_empty=true skia_enable_gpu=false skia_enable_pdf=false skia_use_harfbuzz=false skia_use_icu=false skia_enable_pdf=false skia_enable_svg=false is_official_build=true skia_use_system_zlib=true skia_use_system_libpng=true
+SKIA_FLAGS=skia_enable_tools=false skia_enable_skottie=false skia_enable_svg=false skia_enable_fontmgr_fontconfig=false skia_enable_fontmgr_android=false skia_use_fontconfig=false skia_use_freetype=false skia_enable_fontmgr_empty=true skia_enable_gpu=false skia_enable_pdf=false skia_use_harfbuzz=false skia_use_icu=false skia_enable_pdf=false skia_enable_svg=false is_official_build=true skia_use_system_zlib=true skia_use_system_libpng=true
 
 all: bench
 
