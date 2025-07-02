@@ -28,9 +28,9 @@ bench: coremark.csv
 
 coremark.csv: build-native build-lfi build-lfi-stores
 	hyperfine --export-csv coremark.csv --runs $(RUNS) --warmup $(WARMUP) \
-		-n 'LFI' 'lfi-run -- ./build-lfi/coremark 0x0 0x0 0x66 80000 7 1 2000' \
-		-n 'LFI-stores' 'lfi-run -- ./build-lfi-stores/coremark 0x0 0x0 0x66 80000 7 1 2000' \
-		-n 'Native' './build-native/coremark 0x0 0x0 0x66 80000 7 1 2000'
+		-n 'LFI' 'lfi-run -- ./build-lfi/coremark 0x0 0x0 0x66 20000 7 1 2000' \
+		-n 'LFI-stores' 'lfi-run -- ./build-lfi-stores/coremark 0x0 0x0 0x66 20000 7 1 2000' \
+		-n 'Native' './build-native/coremark 0x0 0x0 0x66 20000 7 1 2000'
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR)
