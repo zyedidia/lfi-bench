@@ -1,0 +1,6 @@
+jpeg.h
+benchmark
+lib_*.c
+lib_*.S
+*.lfi
+symbols.txt

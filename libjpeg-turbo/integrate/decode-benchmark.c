@@ -4,8 +4,12 @@
 #include <string.h>
 #include <time.h>
 #include <sys/stat.h>
+
 #include "jpeg.h"
 
+int jpeg_decompress(tjhandle handle, const unsigned char *jpegBuf,
+        unsigned long jpegSize, unsigned char *dstBuf,
+        int width, int height);
 
 void benchmark_decode_image(const char* filename, int iterations) {
     printf("Decoding %s %d times...\n", filename, iterations);
@@ -71,7 +75,7 @@ void benchmark_decode_image(const char* filename, int iterations) {
     }
 
     for (int i = 0; i < iterations; i++) {
-        if (tjDecompress2(handle, buffer, size, imgBuffer, width, 0, height, TJPF_RGB, 0) < 0) {
+        if (jpeg_decompress(handle, buffer, size, imgBuffer, width, height) < 0) {
             printf("Failed to decode %s (iteration %d): %s\n", filename, i, tjGetErrorStr());
         }
     }
