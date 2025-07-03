@@ -23,7 +23,6 @@ void benchmark_decode_image(const char* filename, int iterations) {
         exit(1);
     }
 
-    printf("1\n");
     unsigned char* buffer = jpeg_malloc(size);
     if (!buffer) {
         printf("Failed to allocate memory for %s\n", filename);
@@ -38,11 +37,8 @@ void benchmark_decode_image(const char* filename, int iterations) {
     }
     fclose(file);
 
-    printf("2\n");
-
     tjhandle handle = tjInitDecompress();
 
-    printf("2.5\n");
     if (!handle) {
         printf("Failed to initialize TurboJPEG decompressor: %s\n", tjGetErrorStr());
         free(buffer);
@@ -55,7 +51,6 @@ void benchmark_decode_image(const char* filename, int iterations) {
         exit(1);
     }
 
-    printf("3\n");
     int width = args[0];
     int height = args[1];
     int jpegSubsamp = args[2];
@@ -80,8 +75,6 @@ void benchmark_decode_image(const char* filename, int iterations) {
             printf("Failed to decode %s (iteration %d): %s\n", filename, i, tjGetErrorStr());
         }
     }
-
-    printf("4\n");
 }
 
 int main(int argc, char* argv[]) {
