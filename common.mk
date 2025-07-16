@@ -23,6 +23,7 @@ NATIVE_TOOLCHAIN := $(TOOLCHAIN_DIR)/aarch64-native.cmake
 LFI_MESON := $(TOOLCHAIN_DIR)/aarch64-lfi.txt
 STORES_MESON := $(TOOLCHAIN_DIR)/aarch64-lfi-stores.txt
 NATIVE_MESON := $(TOOLCHAIN_DIR)/aarch64-native.txt
+UBSAN_MESON := $(TOOLCHAIN_DIR)/aarch64-native-ubsan.txt
 
 #LFI tools
 LFI_CC       := /opt/aarch64-lfi-clang/bin/clang
@@ -33,7 +34,7 @@ LFI_STRIP    := /opt/aarch64-lfi-clang/bin/llvm-strip
 LFI_BIND     := /opt/lfi/bin/lfi-bind
 
 # Standard build directories
-BUILD_DIRS = build-lfi build-lfi-stores build-native
+BUILD_DIRS = build-lfi build-lfi-stores build-native build-ubsan
 
 # Default target - should be overridden in individual Makefiles
 .DEFAULT_GOAL := help
