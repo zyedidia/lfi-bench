@@ -1,6 +1,6 @@
 jpeg.h
 benchmark
-lib_*.c
-lib_*.S
+lib_init.c
+lib_trampolines.S
 *.lfi
 symbols.txt
