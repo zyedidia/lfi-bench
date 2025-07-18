@@ -24,7 +24,7 @@ all:
 # Dependency-ordered library groups
 LIBS_LEVEL_0 = zlib giflib libexpat libxml2 libjpeg-turbo
 LIBS_LEVEL_1 = libpng
-LIBS_LEVEL_2 = libtiff libwebp skia freetype
+LIBS_LEVEL_2 = libtiff libwebp freetype
 
 #XXX kind of a lie as skia depends on freetype but ok because of build order
 

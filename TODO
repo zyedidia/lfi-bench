@@ -2,7 +2,10 @@ Cleanup/Finish
 --------------
 
 -cleanup how skia builds benchmarks
+-fix skia, maybe compiler update broke?
+-fix libvpx, benchmark code changed.
 
+-move to vendoring benchmarks so they don't break when benchmarks change, can periodically refresh.
 -do a full run to check that runtime updates work.
 -expat benchmark runs too long and is not representative, replace it.
 -libpng benchmark is dumb and runs too long.
