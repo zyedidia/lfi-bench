@@ -54,17 +54,42 @@ func calcRaw(bench string, benches map[string][]Benchmark, w io.Writer) {
 
 func calcOverhead(bench string, benches map[string][]Benchmark, w io.Writer) {
 	config := benches[bench]
+	native := benches["Native"]
+
+	nativeMap := make(map[string]float64)
+	for _, nb := range native {
+		nativeMap[nb.Name] = nb.Mean
+	}
+
 	geomean := 1.0
 	n := 0
-	for i, b := range config {
-		nativeMean := benches["Native"][i].Mean
+	for _, b := range config {
+		nativeMean, exists := nativeMap[b.Name]
+		if !exists {
+			log.Printf("Warning: No Native benchmark found for %s", b.Name)
+			continue
+		}
 		overhead := (b.Mean - nativeMean) / nativeMean
 		fmt.Fprintf(w, "%s,%.3f\n", b.Name, overhead*100)
 		geomean *= (1 + overhead)
 		n++
 	}
-	geomean = math.Pow(geomean, 1.0/float64(n)) - 1
-	fmt.Fprintf(w, "geomean,%.3f\n", geomean*100)
+
+	// Also warn about missing benchmarks in the opposite direction
+	configMap := make(map[string]bool)
+	for _, b := range config {
+		configMap[b.Name] = true
+	}
+	for _, nb := range native {
+		if !configMap[nb.Name] {
+			log.Printf("Warning: No %s benchmark found for %s", bench, nb.Name)
+		}
+	}
+
+	if n > 0 {
+		geomean = math.Pow(geomean, 1.0/float64(n)) - 1
+		fmt.Fprintf(w, "geomean,%.3f\n", geomean*100)
+	}
 }
 
 func main() {
