@@ -39,6 +39,9 @@ build-benchmarks: build-lfi build-lfi-stores build-native
 	cmake --build build-native-bench --verbose
 	touch $@
 
+build-integrate: build-lfi
+	$(MAKE) -C integrate all
+
 bench: zlib-compress.csv zlib-decompress.csv
 
 zlib-compress.csv: build-benchmarks bigfile.txt
