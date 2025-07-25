@@ -5,7 +5,7 @@
 #include <time.h>
 #include <sys/stat.h>
 
-#include "jpeg.h"
+#include "jpeg_box.h"
 
 int jpeg_decompress(tjhandle handle, const unsigned char *jpegBuf,
         unsigned long jpegSize, unsigned char *dstBuf,
@@ -27,7 +27,7 @@ void benchmark_decode_image(const char* filename, int iterations) {
         exit(1);
     }
 
-    unsigned char* buffer = jpeg_malloc(size);
+    unsigned char* buffer = jpeg_box_malloc(size);
     if (!buffer) {
         printf("Failed to allocate memory for %s\n", filename);
         fclose(file);
@@ -41,17 +41,17 @@ void benchmark_decode_image(const char* filename, int iterations) {
     }
     fclose(file);
 
-    tjhandle handle = tjInitDecompress();
+    tjhandle handle = LFI_CALL(tjInitDecompress);
 
     if (!handle) {
-        printf("Failed to initialize TurboJPEG decompressor: %s\n", tjGetErrorStr());
+        printf("Failed to initialize TurboJPEG decompressor: %s\n", LFI_CALL(tjGetErrorStr));
         free(buffer);
         exit(1);
     }
-    int * args = (int *)jpeg_malloc(sizeof(int) * 4);
+    int* args = (int*)jpeg_box_stack_push(sizeof(int) * 4);
 
-    if (tjDecompressHeader3(handle, buffer, size, &args[0], &args[1], &args[2], &args[3]) < 0) {
-        printf("Failed to read JPEG header for %s: %s\n", filename, tjGetErrorStr());
+    if (LFI_CALL(tjDecompressHeader3, handle, buffer, size, &args[0], &args[1], &args[2], &args[3]) < 0) {
+        printf("Failed to read JPEG header for %s: %s\n", filename, LFI_CALL(tjGetErrorStr));
         exit(1);
     }
 
@@ -59,6 +59,8 @@ void benchmark_decode_image(const char* filename, int iterations) {
     int height = args[1];
     int jpegSubsamp = args[2];
     int jpegColorspace = args[3];
+
+    jpeg_box_stack_pop(sizeof(int) * 4);
 
     printf("Image dimensions: %dx%d\n", width, height);
 
@@ -68,15 +70,15 @@ void benchmark_decode_image(const char* filename, int iterations) {
     }
 
     size_t bufferSize = width * height * 3;
-    unsigned char* imgBuffer = jpeg_malloc(bufferSize);
+    unsigned char* imgBuffer = jpeg_box_malloc(bufferSize);
     if (!imgBuffer) {
         printf("Failed to allocate image buffer for %s\n", filename);
         exit(1);
     }
 
     for (int i = 0; i < iterations; i++) {
-        if (jpeg_decompress(handle, buffer, size, imgBuffer, width, height) < 0) {
-            printf("Failed to decode %s (iteration %d): %s\n", filename, i, tjGetErrorStr());
+        if (LFI_CALL(jpeg_decompress, handle, buffer, size, imgBuffer, width, height) < 0) {
+            printf("Failed to decode %s (iteration %d): %s\n", filename, i, LFI_CALL(tjGetErrorStr));
         }
     }
 }
