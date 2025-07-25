@@ -2,11 +2,9 @@
 #include <stdlib.h>
 #include <zlib.h>
 
-#define CHUNK 16384  // Buffer size for reading/writing
+#include "zlib_box.h"
 
-int zlib_inflate(z_streamp strm, int flush);
-int zlib_inflateInit(z_streamp strm);
-int zlib_inflateEnd(z_streamp strm);
+#define CHUNK 16384  // Buffer size for reading/writing
 
 void decompress_file(const char *input_file, const char *output_file) {
     FILE *source = fopen(input_file, "rb");
@@ -23,7 +21,7 @@ void decompress_file(const char *input_file, const char *output_file) {
     }
 
     z_stream strm = {0};
-    if (zlib_inflateInit(&strm) != Z_OK) {
+    if (LFI_CALL(inflateInit, &strm) != Z_OK) {
         fprintf(stderr, "Failed to initialize decompression\n");
         fclose(source);
         fclose(dest);
@@ -38,7 +36,7 @@ void decompress_file(const char *input_file, const char *output_file) {
         strm.avail_in = fread(in, 1, CHUNK, source);
         if (ferror(source)) {
             fprintf(stderr, "Error reading input file\n");
-            zlib_inflateEnd(&strm);
+            LFI_CALL(inflateEnd, &strm);
             fclose(source);
             fclose(dest);
             exit(EXIT_FAILURE);
@@ -49,10 +47,10 @@ void decompress_file(const char *input_file, const char *output_file) {
         do {
             strm.avail_out = CHUNK;
             strm.next_out = out;
-            ret = zlib_inflate(&strm, Z_NO_FLUSH);
+            ret = LFI_CALL(inflate, &strm, Z_NO_FLUSH);
             if (ret == Z_STREAM_ERROR || ret == Z_DATA_ERROR || ret == Z_MEM_ERROR) {
                 fprintf(stderr, "Decompression error: %d\n", ret);
-                zlib_inflateEnd(&strm);
+                LFI_CALL(inflateEnd, &strm);
                 fclose(source);
                 fclose(dest);
                 exit(EXIT_FAILURE);
@@ -60,7 +58,7 @@ void decompress_file(const char *input_file, const char *output_file) {
             size_t have = CHUNK - strm.avail_out;
             if (fwrite(out, 1, have, dest) != have || ferror(dest)) {
                 fprintf(stderr, "Error writing output file\n");
-                zlib_inflateEnd(&strm);
+                LFI_CALL(inflateEnd, &strm);
                 fclose(source);
                 fclose(dest);
                 exit(EXIT_FAILURE);
@@ -69,7 +67,7 @@ void decompress_file(const char *input_file, const char *output_file) {
 
     } while (ret != Z_STREAM_END);
 
-    zlib_inflateEnd(&strm);
+    LFI_CALL(inflateEnd, &strm);
     fclose(source);
     fclose(dest);
 

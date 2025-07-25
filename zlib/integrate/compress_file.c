@@ -2,11 +2,9 @@
 #include <stdlib.h>
 #include <zlib.h>
 
-#define CHUNK 16384  // Buffer size for reading/writing
+#include "zlib_box.h"
 
-int zlib_deflateInit(z_streamp strm, int level);
-int zlib_deflate(z_streamp strm, int flush);
-int zlib_deflateEnd(z_streamp strm);
+#define CHUNK 16384  // Buffer size for reading/writing
 
 void compress_file(const char *input_file, const char *output_file) {
     FILE *source = fopen(input_file, "rb");
@@ -23,7 +21,7 @@ void compress_file(const char *input_file, const char *output_file) {
     }
 
     z_stream strm = {0};
-    if (zlib_deflateInit(&strm, Z_DEFAULT_COMPRESSION) != Z_OK) {
+    if (LFI_CALL(deflateInit, &strm, Z_DEFAULT_COMPRESSION) != Z_OK) {
         fprintf(stderr, "Failed to initialize compression\n");
         fclose(source);
         fclose(dest);
@@ -38,7 +36,7 @@ void compress_file(const char *input_file, const char *output_file) {
         strm.avail_in = fread(in, 1, CHUNK, source);
         if (ferror(source)) {
             fprintf(stderr, "Error reading input file\n");
-            zlib_deflateEnd(&strm);
+            deflateEnd(&strm);
             fclose(source);
             fclose(dest);
             exit(EXIT_FAILURE);
@@ -49,11 +47,11 @@ void compress_file(const char *input_file, const char *output_file) {
         do {
             strm.avail_out = CHUNK;
             strm.next_out = out;
-            zlib_deflate(&strm, flush);
+            LFI_CALL(deflate, &strm, flush);
             size_t have = CHUNK - strm.avail_out;
             if (fwrite(out, 1, have, dest) != have || ferror(dest)) {
                 fprintf(stderr, "Error writing output file\n");
-                zlib_deflateEnd(&strm);
+                LFI_CALL(deflateEnd, &strm);
                 fclose(source);
                 fclose(dest);
                 exit(EXIT_FAILURE);
@@ -62,7 +60,7 @@ void compress_file(const char *input_file, const char *output_file) {
 
     } while (flush != Z_FINISH);
 
-    zlib_deflateEnd(&strm);
+    LFI_CALL(deflateEnd, &strm);
     fclose(source);
     fclose(dest);
     printf("File '%s' compressed successfully to '%s'\n", input_file, output_file);

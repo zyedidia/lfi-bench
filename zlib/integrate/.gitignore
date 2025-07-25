@@ -1,0 +1,7 @@
+zlib_box.h
+zlib.lfi
+lib_init.c
+lib_trampolines.S
+symbols.txt
+compress_file
+decompress_file
