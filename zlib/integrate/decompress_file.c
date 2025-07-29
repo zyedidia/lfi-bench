@@ -20,8 +20,8 @@ void decompress_file(const char *input_file, const char *output_file) {
         exit(EXIT_FAILURE);
     }
 
-    z_stream strm = {0};
-    if (LFI_CALL(inflateInit, &strm) != Z_OK) {
+    z_stream* strm = zlib_box_calloc(1, sizeof(strm));
+    if (LFI_CALL(inflateInit, strm) != Z_OK) {
         fprintf(stderr, "Failed to initialize decompression\n");
         fclose(source);
         fclose(dest);
@@ -33,43 +33,44 @@ void decompress_file(const char *input_file, const char *output_file) {
     int ret;
 
     do {
-        strm.avail_in = fread(in, 1, CHUNK, source);
+        strm->avail_in = fread(in, 1, CHUNK, source);
         if (ferror(source)) {
             fprintf(stderr, "Error reading input file\n");
-            LFI_CALL(inflateEnd, &strm);
+            LFI_CALL(inflateEnd, strm);
             fclose(source);
             fclose(dest);
             exit(EXIT_FAILURE);
         }
-        if (strm.avail_in == 0) break;
-        strm.next_in = in;
+        if (strm->avail_in == 0) break;
+        strm->next_in = in;
 
         do {
-            strm.avail_out = CHUNK;
-            strm.next_out = out;
-            ret = LFI_CALL(inflate, &strm, Z_NO_FLUSH);
+            strm->avail_out = CHUNK;
+            strm->next_out = out;
+            ret = LFI_CALL(inflate, strm, Z_NO_FLUSH);
             if (ret == Z_STREAM_ERROR || ret == Z_DATA_ERROR || ret == Z_MEM_ERROR) {
                 fprintf(stderr, "Decompression error: %d\n", ret);
-                LFI_CALL(inflateEnd, &strm);
+                LFI_CALL(inflateEnd, strm);
                 fclose(source);
                 fclose(dest);
                 exit(EXIT_FAILURE);
             }
-            size_t have = CHUNK - strm.avail_out;
+            size_t have = CHUNK - strm->avail_out;
             if (fwrite(out, 1, have, dest) != have || ferror(dest)) {
                 fprintf(stderr, "Error writing output file\n");
-                LFI_CALL(inflateEnd, &strm);
+                LFI_CALL(inflateEnd, strm);
                 fclose(source);
                 fclose(dest);
                 exit(EXIT_FAILURE);
             }
-        } while (strm.avail_out == 0);
+        } while (strm->avail_out == 0);
 
     } while (ret != Z_STREAM_END);
 
-    LFI_CALL(inflateEnd, &strm);
+    LFI_CALL(inflateEnd, strm);
     fclose(source);
     fclose(dest);
+    zlib_box_free(strm);
 
     if (ret == Z_STREAM_END) {
         printf("File '%s' decompressed successfully to '%s'\n", input_file, output_file);
