@@ -13,7 +13,6 @@ $(TARGET_DIR):
 	git clone https://github.com/zyedidia/coremark -b lfi
 	cp CMakeLists.txt $(TARGET_DIR)/CMakeLists.txt
 
-# Set CMake flags for static linking like the meson build
 CMAKE_FLAGS := -DCMAKE_EXE_LINKER_FLAGS="-static-pie"
 
 # Include common CMake build targets
