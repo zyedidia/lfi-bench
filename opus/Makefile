@@ -20,31 +20,25 @@ opus-benchdata:
 	tar -xf opus-benchdata.tar.gz
 	rm -f opus-benchdata.tar.gz
 
-build-lfi: $(TARGET_DIR)
-	LDFLAGS="-static-pie" meson setup build-lfi $(TARGET_DIR) --cross-file $(LFI_MESON) -Ddefault_library=static
-	ninja -C build-lfi
+# Set CMake flags for static linking like the meson build and enable programs
+CMAKE_FLAGS := -DBUILD_SHARED_LIBS=OFF -DCMAKE_EXE_LINKER_FLAGS="-static-pie" -DOPUS_BUILD_PROGRAMS=ON
 
-build-lfi-stores: $(TARGET_DIR)
-	LDFLAGS="-static-pie" meson setup build-lfi-stores $(TARGET_DIR) --cross-file $(STORES_MESON) -Ddefault_library=static
-	ninja -C build-lfi-stores
-
-build-native: $(TARGET_DIR)
-	LDFLAGS="-static-pie" meson setup build-native $(TARGET_DIR) --cross-file $(NATIVE_MESON) -Ddefault_library=static
-	ninja -C build-native
+# Include common CMake build targets
+include ../targets.mk
 
 bench: opus-encode.csv opus-decode.csv
 
 opus-encode.csv: opus-benchdata build-native build-lfi build-lfi-stores
 	hyperfine --export-csv opus-encode.csv --runs $(RUNS) --warmup $(WARMUP) \
-		-n 'LFI' 'lfi-run -- ./build-lfi/src/opus_demo -e voip 48000 2 96000 opus-benchdata/music_orig.wav /dev/null' \
-		-n 'LFI-stores' 'lfi-run -- ./build-lfi-stores/src/opus_demo -e voip 48000 2 96000 opus-benchdata/music_orig.wav /dev/null' \
-		-n 'Native' './build-native/src/opus_demo -e voip 48000 2 96000 opus-benchdata/music_orig.wav /dev/null'
+		-n 'LFI' 'lfi-run -- ./build-lfi/opus_demo -e voip 48000 2 96000 opus-benchdata/music_orig.wav /dev/null' \
+		-n 'LFI-stores' 'lfi-run -- ./build-lfi-stores/opus_demo -e voip 48000 2 96000 opus-benchdata/music_orig.wav /dev/null' \
+		-n 'Native' './build-native/opus_demo -e voip 48000 2 96000 opus-benchdata/music_orig.wav /dev/null'
 
 opus-decode.csv: opus-benchdata build-native build-lfi build-lfi-stores
 	hyperfine --export-csv opus-decode.csv --runs $(RUNS) --warmup $(WARMUP) \
-		-n 'LFI' 'lfi-run -- ./build-lfi/src/opus_demo -d 48000 2 opus-benchdata/music_orig.opus /dev/null' \
-		-n 'LFI-stores' 'lfi-run -- ./build-lfi-stores/src/opus_demo -d 48000 2 opus-benchdata/music_orig.opus /dev/null' \
-		-n 'Native' './build-native/src/opus_demo -d 48000 2 opus-benchdata/music_orig.opus /dev/null'
+		-n 'LFI' 'lfi-run -- ./build-lfi/opus_demo -d 48000 2 opus-benchdata/music_orig.opus /dev/null' \
+		-n 'LFI-stores' 'lfi-run -- ./build-lfi-stores/opus_demo -d 48000 2 opus-benchdata/music_orig.opus /dev/null' \
+		-n 'Native' './build-native/opus_demo -d 48000 2 opus-benchdata/music_orig.opus /dev/null'
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR) opus-benchdata
