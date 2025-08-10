@@ -11,18 +11,13 @@ all: bench
 
 $(TARGET_DIR):
 	git clone https://github.com/zyedidia/coremark -b lfi
+	cp CMakeLists.txt $(TARGET_DIR)/CMakeLists.txt
 
-build-lfi: $(TARGET_DIR)
-	LDFLAGS="-static-pie" meson setup build-lfi $(TARGET_DIR) --cross-file $(LFI_MESON) -Ddefault_library=static
-	ninja -C build-lfi
+# Set CMake flags for static linking like the meson build
+CMAKE_FLAGS := -DCMAKE_EXE_LINKER_FLAGS="-static-pie"
 
-build-lfi-stores: $(TARGET_DIR)
-	LDFLAGS="-static-pie" meson setup build-lfi-stores $(TARGET_DIR) --cross-file $(STORES_MESON) -Ddefault_library=static
-	ninja -C build-lfi-stores
-
-build-native: $(TARGET_DIR)
-	LDFLAGS="-static-pie" meson setup build-native $(TARGET_DIR) --cross-file $(NATIVE_MESON) -Ddefault_library=static
-	ninja -C build-native
+# Include common CMake build targets
+include ../targets.mk
 
 bench: coremark.csv
 
