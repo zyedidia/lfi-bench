@@ -12,17 +12,12 @@ all: bench
 $(TARGET_DIR):
 	git clone https://github.com/facebook/zstd.git
 
-build-lfi: $(TARGET_DIR)
-	meson setup build-lfi $(TARGET_DIR)/build/meson --cross-file $(LFI_MESON) -Ddefault_library=static
-	ninja -C build-lfi
+# Set CMake source directory to the cmake subdirectory
+CMAKE_SOURCE_DIR := $(TARGET_DIR)/build/cmake
+CMAKE_FLAGS := -DZSTD_BUILD_PROGRAMS=ON -DZSTD_BUILD_SHARED=OFF -DCMAKE_EXE_LINKER_FLAGS="-static-pie"
 
-build-lfi-stores: $(TARGET_DIR)
-	meson setup build-lfi-stores $(TARGET_DIR)/build/meson --cross-file $(STORES_MESON) -Ddefault_library=static
-	ninja -C build-lfi-stores
-
-build-native: $(TARGET_DIR)
-	meson setup build-native $(TARGET_DIR)/build/meson --cross-file $(NATIVE_MESON) -Ddefault_library=static
-	ninja -C build-native
+# Include common CMake build targets
+include ../targets.mk
 
 bench: build-native build-lfi-stores build-lfi bigfile.txt
 	mkdir -p /tmp/$(USER)

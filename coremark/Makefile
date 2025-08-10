@@ -29,6 +29,6 @@ coremark.csv: build-native build-lfi build-lfi-stores
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR)
-		rm -f *.csv
+	rm -f *.csv
 
 .PHONY: all bench clean
