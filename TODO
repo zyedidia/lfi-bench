@@ -1,12 +1,17 @@
 Cleanup/Finish
 --------------
 
+-add support for new targets to consolidate and plot.
+
+-add x86-64 support for lfi
+-skia and libvpx are using different build systems so arch is hard coded and they don't play
+nice with everythng else. maybe vcpkg can help move everything to cmake.
+
+-explore moving from git clones to vcpkg for grabbing code and installing. 
+-get get libvpx and dav1d onto cmake.
 -cleanup how skia builds benchmarks
 -fix skia, maybe compiler update broke?
 -fix libvpx, benchmark code changed.
-
--investigate moving from git clones to vcpkg for grabbing code and
-installing.
 
 -move to vendoring benchmarks so they don't break when benchmarks change, can periodically refresh.
 -do a full run to check that runtime updates work.
