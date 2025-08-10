@@ -20,7 +20,7 @@ opus-benchdata:
 	tar -xf opus-benchdata.tar.gz
 	rm -f opus-benchdata.tar.gz
 
-# Set CMake flags for static linking like the meson build and enable programs
+# Set CMake flags for static linking and enable programs
 CMAKE_FLAGS := -DBUILD_SHARED_LIBS=OFF -DCMAKE_EXE_LINKER_FLAGS="-static-pie" -DOPUS_BUILD_PROGRAMS=ON
 
 # Include common CMake build targets
