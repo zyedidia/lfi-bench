@@ -22,7 +22,7 @@ bench: coremark.csv
 
 # CPU benchmark
 coremark.csv: build-native build-lfi build-lfi-stores
-	../hyperfine.py --name coremark --cmd "./{BUILD_DIR}/coremark 0x0 0x0 0x66 20000 7 1 2000" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP)
+	../hyperfine.py --name coremark --cmd "./{BUILD_DIR}/coremark 0x0 0x0 0x66 20000 7 1 4000" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP)
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR)
