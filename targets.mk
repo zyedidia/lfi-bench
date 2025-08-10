@@ -20,6 +20,9 @@ CMAKE_INSTALL_PREFIX_NATIVE ?= --install-prefix $(NATIVE_INSTALL)
 
 #---ADD NEW TARGETS HERE---
 
+# Hyperfine benchmark targets (name:runner:build_dir)
+HYPERFINE_TARGETS = LFI:lfi-run:build-lfi LFI-stores:lfi-run:build-lfi-stores Native::build-native 
+
 # Common build targets
 build-lfi: $(TARGET_DIR)
 	cmake -S $(CMAKE_SOURCE_DIR) $(CMAKE_FLAGS) -B build-lfi -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) $(CMAKE_INSTALL_PREFIX_LFI) -DCMAKE_BUILD_TYPE=Release
@@ -32,11 +35,6 @@ build-lfi-stores: $(TARGET_DIR)
 build-native: $(TARGET_DIR)
 	cmake -S $(CMAKE_SOURCE_DIR) $(CMAKE_FLAGS) -B build-native -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) $(CMAKE_INSTALL_PREFIX_NATIVE) -DCMAKE_BUILD_TYPE=Release
 	cmake --build build-native -j $(JOBS)
-
-# ---Example for host build, uncomment if needed---
-#build-host: $(TARGET_DIR)
-#	cmake -S $(CMAKE_SOURCE_DIR) $(CMAKE_FLAGS) -B build-host -DCMAKE_TOOLCHAIN_FILE=$(HOST_TOOLCHAIN) -DCMAKE_BUILD_TYPE=Release
-#	cmake --build build-host -j $(JOBS)
 
 # Common install target
 install: build-lfi build-lfi-stores build-native

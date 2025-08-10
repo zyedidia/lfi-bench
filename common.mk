@@ -36,11 +36,6 @@ LFI_BIND     := /opt/lfi/bin/lfi-bind
 # Standard build directories
 BUILD_DIRS = build-lfi build-lfi-stores build-native
 
-# Hyperfine benchmark targets (name:runner:build_dir)
-# ---ADD NEW TARGETS HERE---
-# format is-- Target:runner:build_dir
-HYPERFINE_TARGETS = LFI:lfi-run:build-lfi LFI-stores:lfi-run:build-lfi-stores Native::build-native 
-
 
 # Default target - should be overridden in individual Makefiles
 .DEFAULT_GOAL := help
