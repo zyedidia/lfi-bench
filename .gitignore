@@ -1,4 +1,5 @@
 benchmark-lib
+tags
 *.csv
 !spec2017/*.csv
 !results/aarch64/m2/*.csv
@@ -7,12 +8,17 @@ benchmark-lib
 build-lfi
 build-lfi-stores
 build-native
+libjpeg-turbo/libjpeg-turbo/
+skia/skia/
 fdk-aac/fdk-aac/
 libavc/libavc/
 libexpat/expat
 libexpat/libexpat/
+freetype/freetype/
 libpng/image.png
 libpng/libpng/
 libtiff/libtiff/
 libxml2/libxml2/
+*/build*
 results/*
+*/perf*
