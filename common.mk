@@ -20,6 +20,7 @@ TOOLCHAIN_DIR := $(PARENT_DIR)/toolchains
 LFI_TOOLCHAIN := $(TOOLCHAIN_DIR)/aarch64-lfi.cmake
 STORES_TOOLCHAIN := $(TOOLCHAIN_DIR)/aarch64-lfi-stores.cmake
 NATIVE_TOOLCHAIN := $(TOOLCHAIN_DIR)/aarch64-native.cmake
+HOST_TOOLCHAIN := $(TOOLCHAIN_DIR)/host.cmake
 LFI_MESON := $(TOOLCHAIN_DIR)/aarch64-lfi.txt
 STORES_MESON := $(TOOLCHAIN_DIR)/aarch64-lfi-stores.txt
 NATIVE_MESON := $(TOOLCHAIN_DIR)/aarch64-native.txt

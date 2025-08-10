@@ -12,22 +12,13 @@ all: bench
 $(TARGET_DIR):
 	git clone git@github.com:libjpeg-turbo/libjpeg-turbo.git
 
-build-lfi: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-lfi -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) -DCMAKE_INSTALL_PREFIX=$(LFI_INSTALL) -DCMAKE_BUILD_TYPE=Release
-	cmake --build build-lfi -j $(JOBS)
+# Override install prefix format for libjpeg-turbo
+CMAKE_INSTALL_PREFIX_LFI = -DCMAKE_INSTALL_PREFIX=$(LFI_INSTALL)
+CMAKE_INSTALL_PREFIX_STORES = -DCMAKE_INSTALL_PREFIX=$(STORES_INSTALL)
+CMAKE_INSTALL_PREFIX_NATIVE = -DCMAKE_INSTALL_PREFIX=$(NATIVE_INSTALL)
 
-build-lfi-stores: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-lfi-stores -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) -DCMAKE_INSTALL_PREFIX=$(STORES_INSTALL) -DCMAKE_BUILD_TYPE=Release
-	cmake --build build-lfi-stores -j $(JOBS)
-
-build-native: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-native -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) -DCMAKE_INSTALL_PREFIX=$(NATIVE_INSTALL) -DCMAKE_BUILD_TYPE=Release
-	cmake --build build-native -j $(JOBS)
-
-install: build-lfi build-lfi-stores build-native
-	cmake --install build-lfi
-	cmake --install build-lfi-stores
-	cmake --install build-native
+# Include common CMake build targets
+include ../targets.mk
 
 build-benchmarks: build-lfi build-lfi-stores build-native
 	cmake -S benchmark -B build-lfi-bench -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) -DLIBJPEG_DIR=../build-lfi

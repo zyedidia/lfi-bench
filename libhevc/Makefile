@@ -12,22 +12,11 @@ all: bench
 $(TARGET_DIR):
 	git clone https://github.com/ittiam-systems/libhevc.git
 
-build-lfi: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) $(CMAKE_FLAGS) -B build-lfi -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) --install-prefix $(LFI_INSTALL) -DSYSTEM_PROCESSOR="aarch64" -DSYSTEM_NAME="Linux" -DCMAKE_BUILD_TYPE=Release
-	cmake --build build-lfi -j $(JOBS)
+# Add libhevc-specific flags
+CMAKE_FLAGS := -DSYSTEM_PROCESSOR="aarch64" -DSYSTEM_NAME="Linux"
 
-build-lfi-stores: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) $(CMAKE_FLAGS) -B build-lfi-stores -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) --install-prefix $(STORES_INSTALL) -DSYSTEM_PROCESSOR="aarch64" -DSYSTEM_NAME="Linux" -DCMAKE_BUILD_TYPE=Release
-	cmake --build build-lfi-stores -j $(JOBS)
-
-build-native: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) $(CMAKE_FLAGS) -B build-native -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) --install-prefix $(NATIVE_INSTALL) -DCMAKE_BUILD_TYPE=Release
-	cmake --build build-native -j $(JOBS)
-
-install: build-lfi build-lfi-stores build-native
-	cmake --install build-lfi
-	cmake --install build-lfi-stores
-	cmake --install build-native
+# Include common CMake build targets
+include ../targets.mk
 
 example.yuv:
 	ffmpeg -f lavfi -i testsrc2=duration=5:size=3840x2160:rate=30 -pix_fmt yuv420p example.yuv

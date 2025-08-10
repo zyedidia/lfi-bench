@@ -13,22 +13,8 @@ all: bench
 $(TARGET_DIR):
 	git clone https://github.com/madler/zlib.git
 
-build-lfi: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) $(CMAKE_FLAGS) -B build-lfi -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) --install-prefix $(LFI_INSTALL) -DCMAKE_BUILD_TYPE=Release
-	cmake --build build-lfi -j $(JOBS)
-
-build-lfi-stores: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) $(CMAKE_FLAGS) -B build-lfi-stores -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) --install-prefix $(STORES_INSTALL) -DCMAKE_BUILD_TYPE=Release
-	cmake --build build-lfi-stores -j $(JOBS)
-
-build-native: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) $(CMAKE_FLAGS) -B build-native -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) --install-prefix $(NATIVE_INSTALL) -DCMAKE_BUILD_TYPE=Release
-	cmake --build build-native -j $(JOBS)
-
-install: build-lfi build-lfi-stores build-native
-	cmake --install build-lfi
-	cmake --install build-lfi-stores
-	cmake --install build-native
+# Include common CMake build targets
+include ../targets.mk
 
 build-benchmarks: build-lfi build-lfi-stores build-native
 	cmake -S benchmark -B build-lfi-bench -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) -DZLIB_DIR=../build-lfi -DZLIB_INCLUDE=../zlib

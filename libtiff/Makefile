@@ -15,25 +15,13 @@ all: bench
 $(TARGET_DIR):
 	git clone https://gitlab.com/libtiff/libtiff.git
 
-build-lfi: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-lfi -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) --install-prefix $(LFI_INSTALL) \
-		-DCMAKE_PREFIX_PATH=$(LFI_INSTALL) $(CMAKE_FLAGS)
-	cmake --build build-lfi -j $(JOBS)
+# Override install prefix format and add PREFIX_PATH for libtiff dependencies
+CMAKE_INSTALL_PREFIX_LFI = --install-prefix $(LFI_INSTALL) -DCMAKE_PREFIX_PATH=$(LFI_INSTALL)
+CMAKE_INSTALL_PREFIX_STORES = --install-prefix $(STORES_INSTALL) -DCMAKE_PREFIX_PATH=$(STORES_INSTALL)
+CMAKE_INSTALL_PREFIX_NATIVE = --install-prefix $(NATIVE_INSTALL) -DCMAKE_PREFIX_PATH=$(NATIVE_INSTALL)
 
-build-lfi-stores: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-lfi-stores -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) --install-prefix $(STORES_INSTALL) \
-		-DCMAKE_PREFIX_PATH=$(STORES_INSTALL) $(CMAKE_FLAGS)
-	cmake --build build-lfi-stores -j $(JOBS)
-
-build-native: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-native -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) --install-prefix $(NATIVE_INSTALL) \
-		-DCMAKE_PREFIX_PATH=$(NATIVE_INSTALL) $(CMAKE_FLAGS)
-	cmake --build build-native -j $(JOBS)
-
-install: build-lfi build-lfi-stores build-native
-	cmake --install build-lfi
-	cmake --install build-lfi-stores
-	cmake --install build-native
+# Include common CMake build targets
+include ../targets.mk
 
 # Generate test TIFF images
 test_uncompressed.tiff:

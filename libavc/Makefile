@@ -12,22 +12,13 @@ all: bench
 $(TARGET_DIR):
 	git clone https://github.com/libpag/libavc.git
 
-build-lfi: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-lfi -DCMAKE_TOOLCHAIN_FILE=$(LFI_TOOLCHAIN) -DCMAKE_INSTALL_PREFIX=$(LFI_INSTALL) -DCMAKE_BUILD_TYPE=Release
-	cmake --build build-lfi -j $(JOBS)
+# Override install prefix format for libavc
+CMAKE_INSTALL_PREFIX_LFI = -DCMAKE_INSTALL_PREFIX=$(LFI_INSTALL)
+CMAKE_INSTALL_PREFIX_STORES = -DCMAKE_INSTALL_PREFIX=$(STORES_INSTALL)
+CMAKE_INSTALL_PREFIX_NATIVE = -DCMAKE_INSTALL_PREFIX=$(NATIVE_INSTALL)
 
-build-lfi-stores: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-lfi-stores -DCMAKE_TOOLCHAIN_FILE=$(STORES_TOOLCHAIN) -DCMAKE_INSTALL_PREFIX=$(STORES_INSTALL) -DCMAKE_BUILD_TYPE=Release
-	cmake --build build-lfi-stores -j $(JOBS)
-
-build-native: $(TARGET_DIR)
-	cmake -S $(TARGET_DIR) -B build-native -DCMAKE_TOOLCHAIN_FILE=$(NATIVE_TOOLCHAIN) -DCMAKE_INSTALL_PREFIX=$(NATIVE_INSTALL) -DCMAKE_BUILD_TYPE=Release
-	cmake --build build-native -j $(JOBS)
-
-install: build-lfi build-lfi-stores build-native
-	cmake --install build-lfi
-	cmake --install build-lfi-stores
-	cmake --install build-native
+# Include common CMake build targets
+include ../targets.mk
 
 test.mp4:
 	ffmpeg -f lavfi -i testsrc=duration=2:size=640x480:rate=30 -pix_fmt yuv420p -c:v libx264 -profile:v baseline -preset ultrafast test.mp4
