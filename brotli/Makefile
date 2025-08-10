@@ -28,19 +28,10 @@ bigfile.txt.br: build-native bigfile.txt
 bench: brotli-compress.csv brotli-decompress.csv
 
 brotli-compress.csv: build-lfi build-lfi-stores build-native bigfile.txt
-	rm -f bigfile.txt.br  # Clean previous compressed file
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv brotli-compress.csv \
-		--prepare 'rm -f bigfile.txt.br' \
-		-n 'LFI' 'lfi-run -- build-lfi/brotli -o bigfile.txt.br bigfile.txt' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/brotli -o bigfile.txt.br bigfile.txt' \
-		-n 'Native' 'build-native/brotli -o bigfile.txt.br bigfile.txt'
+	../hyperfine.py --name brotli-compress --cmd "{BUILD_DIR}/brotli -o bigfile.txt.br bigfile.txt" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP) --setup="rm -f bigfile.txt.br"
 
 brotli-decompress.csv: build-lfi build-lfi-stores build-native bigfile.txt.br
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv brotli-decompress.csv \
-		--prepare 'rm -f bigfile_decompressed.txt' \
-		-n 'LFI' 'lfi-run -- build-lfi/brotli -d -o bigfile_decompressed.txt bigfile.txt.br' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/brotli -d -o bigfile_decompressed.txt bigfile.txt.br' \
-		-n 'Native' 'build-native/brotli -d -o bigfile_decompressed.txt bigfile.txt.br'
+	../hyperfine.py --name brotli-decompress --cmd "{BUILD_DIR}/brotli -d -o bigfile_decompressed.txt bigfile.txt.br" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP) --setup="rm -f bigfile_decompressed.txt"
 
 clean:
 	rm -f *.csv

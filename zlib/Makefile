@@ -27,17 +27,13 @@ build-benchmarks: build-lfi build-lfi-stores build-native
 
 bench: zlib-compress.csv zlib-decompress.csv
 
+# Compress benchmark
 zlib-compress.csv: build-benchmarks bigfile.txt
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv zlib-compress.csv \
-		-n 'LFI' 'lfi-run -- build-lfi-bench/compress_file' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores-bench/compress_file' \
-		-n 'Native' 'build-native-bench/compress_file'
+	../hyperfine.py --name zlib-compress --cmd "{BUILD_DIR}-bench/compress_file" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP)
 
+# Decompress benchmark  
 zlib-decompress.csv: build-benchmarks bigfile.txt
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv zlib-decompress.csv \
-		-n 'LFI' 'lfi-run -p -- build-lfi-bench/decompress_file' \
-		-n 'LFI-stores' 'lfi-run -p -- build-lfi-stores-bench/decompress_file' \
-		-n 'Native' 'build-native-bench/decompress_file'
+	../hyperfine.py --name zlib-decompress --cmd "{BUILD_DIR}-bench/decompress_file" --run-command-flags "-p" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP)
 
 clean:
 	rm -f *.csv

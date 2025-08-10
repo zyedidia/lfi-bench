@@ -5,6 +5,9 @@ Cleanup/Finish
 -fix skia, maybe compiler update broke?
 -fix libvpx, benchmark code changed.
 
+-investigate moving from git clones to vcpkg for grabbing code and
+installing.
+
 -move to vendoring benchmarks so they don't break when benchmarks change, can periodically refresh.
 -do a full run to check that runtime updates work.
 -expat benchmark runs too long and is not representative, replace it.
@@ -12,7 +15,9 @@ Cleanup/Finish
 -add ioctl support in lfi runtime for brotli, finish incorporating brotli.
 -libwepb runs too long.
 -check that inputs are large enough that user space costs are and not being amoritized.
--zst decompress benchmark has too much system time, not enough user, needs to be fixed. compress runs to long, need to fix.
+
+-zstd decompress benchmark has too much system time, not enough user, needs to be fixed. compress runs to long, need to fix.
+-should check zlib also.
 
 
 Microbenchmarks

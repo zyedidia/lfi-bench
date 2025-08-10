@@ -19,6 +19,7 @@ libpng/image.png
 libpng/libpng/
 libtiff/libtiff/
 libxml2/libxml2/
+libxml2/*.xml
 */build*
 results/*
 */perf*

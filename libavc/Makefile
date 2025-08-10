@@ -46,12 +46,7 @@ test.cfg: test.h264
 	@echo "--soc GENERIC" >> test.cfg
 
 libavc-decode.csv: build-lfi build-lfi-stores build-native test.h264 test.cfg
-	# pull test file into buffer cache
-	cat test.h264 > /dev/null
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv libavc-decode.csv \
-		-n 'LFI' 'lfi-run -- build-lfi/avcdec test.cfg' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/avcdec test.cfg' \
-		-n 'Native' 'build-native/avcdec test.cfg'
+	../hyperfine.py --name libavc-decode --cmd "{BUILD_DIR}/avcdec test.cfg" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP) --setup="cat test.h264 > /dev/null"
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR) test.h264 test_download.mp4 test.cfg

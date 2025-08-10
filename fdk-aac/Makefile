@@ -38,10 +38,7 @@ build-native: $(TARGET_DIR)
 bench: fdk-aac-encode.csv
 
 fdk-aac-encode.csv: fdk-aac-benchdata build-native build-lfi build-lfi-stores
-	hyperfine --export-csv fdk-aac-encode.csv --runs $(RUNS) --warmup $(WARMUP) \
-		-n 'LFI' 'lfi-run -p -- ./build-lfi/aac-enc -r 128000 fdk-aac-benchdata/music_medium.wav /dev/null' \
-		-n 'LFI-stores' 'lfi-run -p -- ./build-lfi-stores/aac-enc -r 128000 fdk-aac-benchdata/music_medium.wav /dev/null' \
-		-n 'Native' './build-native/aac-enc -r 128000 fdk-aac-benchdata/music_medium.wav /dev/null'
+	../hyperfine.py --name fdk-aac-encode --cmd "./{BUILD_DIR}/aac-enc -r 128000 fdk-aac-benchdata/music_medium.wav /dev/null" --targets "$(HYPERFINE_TARGETS)" --run-command-flags="-p" --runs $(RUNS) --warmup $(WARMUP)
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR) fdk-aac-benchdata

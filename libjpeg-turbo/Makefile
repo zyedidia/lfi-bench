@@ -36,12 +36,9 @@ bench: libjpeg-decode.csv
 
 decode-bench: libjpeg-decode.csv
 
+# JPEG decode benchmark
 libjpeg-decode.csv: build-benchmarks
-	cat image.jpg test.jpeg > /dev/null
-	hyperfine --export-csv libjpeg-decode.csv --runs $(RUNS) --warmup $(WARMUP) \
-		-n 'LFI' 'lfi-run -p -- ./build-lfi-bench/decode-benchmark 100' \
-		-n 'LFI-stores' 'lfi-run -p -- ./build-lfi-stores-bench/decode-benchmark 100' \
-		-n 'Native' './build-native-bench/decode-benchmark 100'
+	../hyperfine.py --name libjpeg-decode --cmd "./{BUILD_DIR}-bench/decode-benchmark 100" --targets "$(HYPERFINE_TARGETS)" --run-command-flags="-p" --runs $(RUNS) --warmup $(WARMUP) --setup="cat image.jpg test.jpeg > /dev/null"
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR)

@@ -14,6 +14,7 @@ $(TARGET_DIR):
 	wget -O libxml2.tar.xz https://download.gnome.org/sources/libxml2/2.14/libxml2-2.14.3.tar.xz
 	tar xvf libxml2.tar.xz
 	mv libxml2-2.14.3 libxml2
+	wget https://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/SwissProt/SwissProt.xml
 	rm -f libxml2.tar.xz
 
 # Include common CMake build targets
@@ -31,13 +32,10 @@ build-benchmarks: build-lfi build-lfi-stores build-native
 bench: libxml2.csv
 
 libxml2.csv: build-benchmarks 
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv libxml2.csv \
-		-n 'LFI' 'lfi-run -p -- build-lfi-bench/xml-parse SwissProt.xml' \
-		-n 'LFI-stores' 'lfi-run -p -- build-lfi-stores-bench/xml-parse SwissProt.xml' \
-		-n 'Native' 'build-native-bench/xml-parse SwissProt.xml'
+	../hyperfine.py --name libxml2 --cmd "{BUILD_DIR}-bench/xml-parse SwissProt.xml" --targets "$(HYPERFINE_TARGETS)" --run-command-flags="-p" --runs $(RUNS) --warmup $(WARMUP)
 
 clean:
-	rm -rf $(BUILD_DIRS) $(TARGET_DIR)
+	rm -rf $(BUILD_DIRS) $(TARGET_DIR) SwissProt.xml
 	rm -rf build-lfi-bench build-lfi-stores-bench build-native-bench
 	rm -f *.csv build-benchmarks
 

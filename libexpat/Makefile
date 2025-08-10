@@ -19,13 +19,10 @@ include ../targets.mk
 bench: expat.csv
 
 expat.csv: build-native build-lfi build-lfi-stores
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv expat.csv \
-		-n 'LFI' 'lfi-run -- build-lfi/tests/runtests' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/tests/runtests' \
-		-n 'Native' 'build-native/tests/runtests'
+	../hyperfine.py --name expat --cmd "{BUILD_DIR}/tests/runtests" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP)
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR) libexpat
-		rm -f *.csv
+	rm -f *.csv
 
 .PHONY: all bench clean

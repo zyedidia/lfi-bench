@@ -24,10 +24,7 @@ build-benchmarks: build-lfi build-lfi-stores build-native
 bench: freetype-benchmark.csv
 
 freetype-benchmark.csv: build-benchmarks font.ttf
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv freetype-benchmark.csv \
-		-n 'LFI' 'lfi-run -p -- build-lfi-bench/benchmark font.ttf 200' \
-		-n 'LFI-stores' 'lfi-run -p -- build-lfi-stores-bench/benchmark font.ttf 200' \
-		-n 'Native' 'build-native-bench/benchmark font.ttf 200'
+	../hyperfine.py --name freetype-benchmark --cmd "{BUILD_DIR}-bench/benchmark font.ttf 200" --targets "$(HYPERFINE_TARGETS)" --run-command-flags="-p" --runs $(RUNS) --warmup $(WARMUP)
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR)

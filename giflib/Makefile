@@ -37,11 +37,9 @@ image.gif:
 
 bench: giftest.csv
 
+# GIF decode benchmark
 giftest.csv: build-native build-lfi build-lfi-stores image.gif
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv giftest.csv \
-		-n 'LFI' 'lfi-run -- build-lfi/gif2rgb image.gif > /dev/null' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/gif2rgb image.gif > /dev/null' \
-		-n 'Native' 'build-native/gif2rgb image.gif > /dev/null'
+	../hyperfine.py --name giftest --cmd "{BUILD_DIR}/gif2rgb image.gif > /dev/null" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP)
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR) image.gif giflib.tar.gz

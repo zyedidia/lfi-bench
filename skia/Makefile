@@ -56,12 +56,9 @@ build-native/decode-benchmark: build-native decode-benchmark.cpp
 
 bench: skia-decode-jpg-png.csv
 
+# Image decode benchmark
 skia-decode-jpg-png.csv: build-native/decode-benchmark build-lfi/decode-benchmark build-lfi-stores/decode-benchmark
-	cat image.* > /dev/null
-	hyperfine --export-csv skia-decode-jpg-png.csv --runs $(RUNS) --warmup $(WARMUP) \
-		-n 'LFI' 'lfi-run -p -- ./build-lfi/decode-benchmark 10' \
-		-n 'LFI-stores' 'lfi-run -p -- ./build-lfi-stores/decode-benchmark 10' \
-		-n 'Native' './build-native/decode-benchmark 10'
+	../hyperfine.py --name skia-decode-jpg-png --cmd "./{BUILD_DIR}/decode-benchmark 10" --targets "$(HYPERFINE_TARGETS)" --run-command-flags="-p" --runs $(RUNS) --warmup $(WARMUP) --setup="cat image.* > /dev/null"
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR)

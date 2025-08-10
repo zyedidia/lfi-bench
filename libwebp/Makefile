@@ -23,17 +23,13 @@ image.webp: build-native image.png
 
 bench: webp-decode.csv webp-encode.csv
 
+# Decode benchmark
 webp-decode.csv: build-native build-lfi build-lfi-stores image.webp
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv webp-decode.csv \
-		-n 'LFI' 'lfi-run -- build-lfi/dwebp image.webp -o /dev/null' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/dwebp image.webp -o /dev/null' \
-		-n 'Native' 'build-native/dwebp image.webp -o /dev/null'
+	../hyperfine.py --name webp-decode --cmd "{BUILD_DIR}/dwebp image.webp -o /dev/null" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP)
 
+# Encode benchmark
 webp-encode.csv: build-native build-lfi build-lfi-stores image.png
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv webp-encode.csv \
-		-n 'LFI' 'lfi-run -- build-lfi/cwebp image.png -o /dev/null' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/cwebp image.png -o /dev/null' \
-		-n 'Native' 'build-native/cwebp image.png -o /dev/null'
+	../hyperfine.py --name webp-encode --cmd "{BUILD_DIR}/cwebp image.png -o /dev/null" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP)
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR) image.png image.webp

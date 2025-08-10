@@ -25,16 +25,9 @@ example.hevc:
 	ffmpeg -f rawvideo -pix_fmt yuv420p -s:v 3840x2160 -r 30 -i example.yuv -c:v libx265 -preset medium -crf 23 example.hevc
 
 bench-encode: build-lfi build-lfi-stores build-native example.yuv
-	cat example.* > /dev/null #warmup cache
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv hevcenc.csv \
-		-n 'LFI' 'lfi-run -- build-lfi/hevcenc --input example.yuv --output /dev/null --src_width 352 --src_height 288 --num_frames_to_encode 30' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/hevcenc --input example.yuv --output /dev/null --src_width 352 --src_height 288 --num_frames_to_encode 30' \
-		-n 'Native' 'build-native/hevcenc --input example.yuv --output /dev/null --src_width 352 --src_height 288 --num_frames_to_encode 30'
+	../hyperfine.py --name hevcenc --cmd "{BUILD_DIR}/hevcenc --input example.yuv --output /dev/null --src_width 352 --src_height 288 --num_frames_to_encode 30" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP) --setup="cat example.* > /dev/null"
 bench: bench-encode example.hevc
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv hevcdec.csv \
-		-n 'LFI' 'lfi-run -- build-lfi/hevcdec --input example.hevc --output /dev/null' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/hevcdec --input example.hevc --output /dev/null' \
-		-n 'Native' 'build-native/hevcdec --input example.hevc --output /dev/null'
+	../hyperfine.py --name hevcdec --cmd "{BUILD_DIR}/hevcdec --input example.hevc --output /dev/null" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP)
 
 clean:
 	rm -f *.csv

@@ -31,11 +31,9 @@ build-native: $(TARGET_DIR)
 
 bench: dav1d.csv
 
+# Video decode benchmark
 dav1d.csv: build-native build-lfi build-lfi-stores dav1d-benchdata
-	hyperfine --export-csv dav1d.csv --runs $(RUNS) --warmup $(WARMUP) \
-		-n 'LFI' 'lfi-run -p -- build-lfi/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads=$(THREADS)' \
-		-n 'LFI-stores' 'lfi-run -p -- build-lfi-stores/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads=$(THREADS)' \
-		-n 'Native' 'build-native/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads $(THREADS)'
+	../hyperfine.py --name dav1d --cmd "{BUILD_DIR}/tools/dav1d -i dav1d-benchdata/Bosphorus_3840x2160_120fps_420_8bit.ivf -o /dev/null --threads=$(THREADS)" --targets "$(HYPERFINE_TARGETS)" --run-command-flags="-p" --runs $(RUNS) --warmup $(WARMUP)
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR) dav1d-benchdata

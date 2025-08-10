@@ -21,14 +21,10 @@ image.png:
 bench: pngtest.csv
 
 pngtest.csv: build-native build-lfi build-lfi-stores image.png
-	cat image.png > /dev/null #pull it into buffer cache
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv pngtest.csv \
-		-n 'LFI' 'lfi-run -- build-lfi/pngtest image.png' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/pngtest image.png' \
-		-n 'Native' 'build-native/pngtest image.png'
+	../hyperfine.py --name pngtest --cmd "{BUILD_DIR}/pngtest image.png" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP) --setup="cat image.png > /dev/null"
 
 clean:
 	rm -rf $(BUILD_DIRS) $(TARGET_DIR) image.png
-		rm -f *.csv
+	rm -f *.csv
 
 .PHONY: all bench clean

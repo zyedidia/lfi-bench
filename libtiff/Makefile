@@ -41,64 +41,40 @@ test_packbits.tiff: test_uncompressed.tiff build-native
 	build-native/tools/tiffcp -c packbits test_uncompressed.tiff test_packbits.tiff
 
 # Encoding benchmarks - measure compression speed
-bench-encode: libtiff-encode-lzw.csv libtiff-encode-packbits.csv
+bench-encode: libtiff-encode-lzw.csv libtiff-encode-zip.csv libtiff-encode-packbits.csv
 
 libtiff-encode-lzw.csv: build-native build-lfi build-lfi-stores test_uncompressed.tiff
-	mkdir -p ./temp
-	cat test_uncompressed.tiff > /dev/null # pull into buffer cache
 	@echo "=== LZW Compression Benchmark ==="
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv libtiff-encode-lzw.csv \
-		-n 'LFI' 'lfi-run -p -- build-lfi/tools/tiffcp -c lzw test_uncompressed.tiff ./temp/test_lfi_lzw.tiff' \
-		-n 'LFI-stores' 'lfi-run -p -- build-lfi-stores/tools/tiffcp -c lzw test_uncompressed.tiff ./temp/test_lfi_stores_lzw.tiff' \
-		-n 'Native' 'build-native/tools/tiffcp -c lzw test_uncompressed.tiff ./temp/test_native_lzw.tiff'
+	../hyperfine.py --name libtiff-encode-lzw --cmd "{BUILD_DIR}/tools/tiffcp -c lzw test_uncompressed.tiff ./temp/test_{BUILD_DIR}_lzw.tiff" --targets "$(HYPERFINE_TARGETS)" --run-command-flags="-p" --runs $(RUNS) --warmup $(WARMUP) --setup="mkdir -p ./temp && cat test_uncompressed.tiff > /dev/null"
 
 libtiff-encode-zip.csv: build-native build-lfi build-lfi-stores test_uncompressed.tiff
-	mkdir -p ./temp
-	cat test_uncompressed.tiff > /dev/null # pull into buffer cache
 	@echo "=== ZIP/Deflate Compression Benchmark ==="
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv libtiff-encode-zip.csv \
-		-n 'LFI' 'lfi-run -p -- build-lfi/tools/tiffcp -c zip test_uncompressed.tiff ./temp/test_lfi_zip.tiff' \
-		-n 'LFI-stores' 'lfi-run -p -- build-lfi-stores/tools/tiffcp -c zip test_uncompressed.tiff ./temp/test_lfi_stores_zip.tiff' \
-		-n 'Native' 'build-native/tools/tiffcp -c zip test_uncompressed.tiff ./temp/test_native_zip.tiff'
+	../hyperfine.py --name libtiff-encode-zip --cmd "{BUILD_DIR}/tools/tiffcp -c zip test_uncompressed.tiff ./temp/test_{BUILD_DIR}_zip.tiff" --targets "$(HYPERFINE_TARGETS)" --run-command-flags="-p" --runs $(RUNS) --warmup $(WARMUP) --setup="mkdir -p ./temp && cat test_uncompressed.tiff > /dev/null"
 
 libtiff-encode-packbits.csv: build-native build-lfi build-lfi-stores test_uncompressed.tiff
-	mkdir -p ./temp
-	cat test_uncompressed.tiff > /dev/null # pull into buffer cache
 	@echo "=== PackBits Compression Benchmark ==="
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv libtiff-encode-packbits.csv \
-		-n 'LFI' 'lfi-run -p -- build-lfi/tools/tiffcp -c packbits test_uncompressed.tiff ./temp/test_lfi_packbits.tiff' \
-		-n 'LFI-stores' 'lfi-run -p -- build-lfi-stores/tools/tiffcp -c packbits test_uncompressed.tiff ./temp/test_lfi_stores_packbits.tiff' \
-		-n 'Native' 'build-native/tools/tiffcp -c packbits test_uncompressed.tiff ./temp/test_native_packbits.tiff'
+	../hyperfine.py --name libtiff-encode-packbits --cmd "{BUILD_DIR}/tools/tiffcp -c packbits test_uncompressed.tiff ./temp/test_{BUILD_DIR}_packbits.tiff" --targets "$(HYPERFINE_TARGETS)" --run-command-flags="-p" --runs $(RUNS) --warmup $(WARMUP) --setup="mkdir -p ./temp && cat test_uncompressed.tiff > /dev/null"
 
-# Decoding benchmarks - measure decompression speed
-bench-decode: libtiff-decode-lzw.csv libtiff-decode-packbits.csv
+# Decoding benchmarks - measure decompression speed  
+bench-decode: libtiff-decode-lzw.csv libtiff-decode-zip.csv
 
 libtiff-decode-lzw.csv: build-native build-lfi build-lfi-stores test_lzw.tiff
-	mkdir -p ./temp
-	cat test_lzw.tiff > /dev/null # pull into buffer cache
 	@echo "=== LZW Decompression Benchmark ==="
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv libtiff-decode-lzw.csv \
-		-n 'LFI' 'lfi-run -p -- build-lfi/tools/tiffcp test_lzw.tiff ./temp/test_lfi_decoded_lzw.tiff' \
-		-n 'LFI-stores' 'lfi-run -p -- build-lfi-stores/tools/tiffcp test_lzw.tiff ./temp/test_lfi_stores_decoded_lzw.tiff' \
-		-n 'Native' 'build-native/tools/tiffcp test_lzw.tiff ./temp/test_native_decoded_lzw.tiff'
+	../hyperfine.py --name libtiff-decode-lzw --cmd "{BUILD_DIR}/tools/tiffcp test_lzw.tiff ./temp/test_{BUILD_DIR}_decoded_lzw.tiff" --targets "$(HYPERFINE_TARGETS)" --run-command-flags="-p" --runs $(RUNS) --warmup $(WARMUP) --setup="mkdir -p ./temp && cat test_lzw.tiff > /dev/null"
 
 libtiff-decode-zip.csv: build-native build-lfi build-lfi-stores test_zip.tiff
-	mkdir -p ./temp
-	cat test_zip.tiff > /dev/null # pull into buffer cache
 	@echo "=== ZIP/Deflate Decompression Benchmark ==="
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv libtiff-decode-zip.csv \
-		-n 'LFI' 'lfi-run -p -- build-lfi/tools/tiffcp test_zip.tiff ./temp/test_lfi_decoded_zip.tiff' \
-		-n 'LFI-stores' 'lfi-run -p -- build-lfi-stores/tools/tiffcp test_zip.tiff ./temp/test_lfi_stores_decoded_zip.tiff' \
-		-n 'Native' 'build-native/tools/tiffcp test_zip.tiff ./temp/test_native_decoded_zip.tiff'
+	../hyperfine.py --name libtiff-decode-zip --cmd "{BUILD_DIR}/tools/tiffcp test_zip.tiff ./temp/test_{BUILD_DIR}_decoded_zip.tiff" --targets "$(HYPERFINE_TARGETS)" --run-command-flags="-p" --runs $(RUNS) --warmup $(WARMUP) --setup="mkdir -p ./temp && cat test_zip.tiff > /dev/null"
 
-libtiff-decode-packbits.csv: build-native build-lfi build-lfi-stores test_packbits.tiff
-	mkdir -p ./temp
-	cat test_packbits.tiff > /dev/null # pull into buffer cache
-	@echo "=== PackBits Decompression Benchmark ==="
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv libtiff-decode-packbits.csv \
-		-n 'LFI' 'lfi-run -p -- build-lfi/tools/tiffcp test_packbits.tiff ./temp/test_lfi_decoded_packbits.tiff' \
-		-n 'LFI-stores' 'lfi-run -p -- build-lfi-stores/tools/tiffcp test_packbits.tiff ./temp/test_lfi_stores_decoded_packbits.tiff' \
-		-n 'Native' 'build-native/tools/tiffcp test_packbits.tiff ./temp/test_native_decoded_packbits.tiff'
+#XXX crashing, needs to be investigated
+#libtiff-decode-packbits.csv: build-native build-lfi build-lfi-stores test_packbits.tiff
+#	mkdir -p ./temp
+#	cat test_packbits.tiff > /dev/null # pull into buffer cache
+#	@echo "=== PackBits Decompression Benchmark ==="
+#	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv libtiff-decode-packbits.csv \
+#		-n 'LFI' 'lfi-run -p -- build-lfi/tools/tiffcp test_packbits.tiff ./temp/test_lfi_decoded_packbits.tiff' \
+#		-n 'LFI-stores' 'lfi-run -p -- build-lfi-stores/tools/tiffcp test_packbits.tiff ./temp/test_lfi_stores_decoded_packbits.tiff' \
+#		-n 'Native' 'build-native/tools/tiffcp test_packbits.tiff ./temp/test_native_decoded_packbits.tiff'
 
 # Run both encoding and decoding benchmarks
 bench: bench-encode bench-decode

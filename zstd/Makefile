@@ -19,18 +19,21 @@ CMAKE_FLAGS := -DZSTD_BUILD_PROGRAMS=ON -DZSTD_BUILD_SHARED=OFF -DCMAKE_EXE_LINK
 # Include common CMake build targets
 include ../targets.mk
 
-bench: build-native build-lfi-stores build-lfi bigfile.txt
+bench: build-native build-lfi-stores build-lfi bigfile.txt zstd-decompress.csv
+
+bigfile.txt:
+	dd if=/dev/zero of=bigfile.txt bs=1M count=100
+
+# Setup: create compressed file using native build
+zstd-decompress.csv: build-native build-lfi-stores build-lfi bigfile.txt
 	mkdir -p /tmp/$(USER)
 	build-native/programs/zstd -f bigfile.txt -o bigfile.txt.zst
-	hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv zstd-decompress.csv \
-		-n 'LFI' 'lfi-run -- build-lfi/programs/zstd -df bigfile.txt.zst -o /tmp/$(USER)/test_lfi_out.txt' \
-		-n 'LFI-stores' 'lfi-run -- build-lfi-stores/programs/zstd -df bigfile.txt.zst -o /tmp/$(USER)/test_lfi_stores_out.txt' \
-		-n 'Native' 'lfi-run -- build-native/programs/zstd -df bigfile.txt.zst -o /tmp/$(USER)/test_native_out.txt'
-	# mkdir -p /tmp/$(USER)
-	# # hyperfine --runs $(RUNS) --warmup $(WARMUP) --export-csv zstd-compress.csv \
-	# # 	-n 'LFI' 'lfi-run -- build-lfi/programs/zstd -f bigfile.txt -o /tmp/$(USER)/test_lfi.zst' \
-	# # 	-n 'LFI-stores' 'lfi-run -- build-lfi-stores/programs/zstd -f bigfile.txt -o /tmp/$(USER)/test_lfi_stores.zst' \
-	# # 	-n 'Native' 'lfi-run -- build-native/programs/zstd -f bigfile.txt -o /tmp/$(USER)/test_native.zst'
+	../hyperfine.py --name zstd-decompress --cmd "{BUILD_DIR}/programs/zstd -df bigfile.txt.zst -o /tmp/$(USER)/test_{BUILD_DIR}_out.txt" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP)
+
+# Note: Compress benchmark is commented out in original, keeping that way
+# zstd-compress.csv: build-native build-lfi-stores build-lfi bigfile.txt  
+# 	mkdir -p /tmp/$(USER)
+# 	../hyperfine.py --name zstd-compress --cmd "{BUILD_DIR}/programs/zstd -f bigfile.txt -o /tmp/$(USER)/test_{BUILD_DIR}.zst" --targets "$(HYPERFINE_TARGETS)" --runs $(RUNS) --warmup $(WARMUP)
 
 clean:
 	rm -f bigfile.txt.zst *.csv
