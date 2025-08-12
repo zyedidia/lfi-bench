@@ -1,6 +1,7 @@
 Cleanup/Finish
 --------------
 
+-need aac decode benchmark.
 -add support for new targets to consolidate and plot.
 
 -add x86-64 support for lfi
