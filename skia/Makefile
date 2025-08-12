@@ -17,38 +17,38 @@ $(TARGET_DIR):
 build-lfi: $(TARGET_DIR)
 	cd $(TARGET_DIR) && \
 		PKG_CONFIG_PATH="$(LFI_INSTALL)/lib/pkgconfig:$(LFI_INSTALL)/lib64/pkgconfig" \
-		bin/gn gen ../build-lfi --args='target_cpu="arm64" cc="/opt/aarch64-lfi-clang/bin/clang" cxx="/opt/aarch64-lfi-clang/bin/clang++" ar="/opt/aarch64-lfi-clang/bin/llvm-ar" extra_cflags=["-I$(LFI_INSTALL)/include"] extra_ldflags=["-L$(LFI_INSTALL)/lib","-L$(LFI_INSTALL)/lib64","-static-pie"] $(SKIA_FLAGS)' && \
+		bin/gn gen ../build-lfi --args='target_cpu="arm64" cc="$(LFI_ROOT)/aarch64-lfi-clang/bin/clang" cxx="$(LFI_ROOT)/aarch64-lfi-clang/bin/clang++" ar="$(LFI_ROOT)/aarch64-lfi-clang/bin/llvm-ar" extra_cflags=["-I$(LFI_INSTALL)/include"] extra_ldflags=["-L$(LFI_INSTALL)/lib","-L$(LFI_INSTALL)/lib64","-static-pie"] $(SKIA_FLAGS)' && \
 		cd ../build-lfi && ninja
 
 build-lfi-stores: $(TARGET_DIR)
 	cd $(TARGET_DIR) && \
 		PKG_CONFIG_PATH="$(STORES_INSTALL)/lib/pkgconfig:$(STORES_INSTALL)/lib64/pkgconfig" \
-		bin/gn gen ../build-lfi-stores --args='target_cpu="arm64" cc="/opt/aarch64-lfi-stores-clang/bin/clang" cxx="/opt/aarch64-lfi-stores-clang/bin/clang++" ar="/opt/aarch64-lfi-stores-clang/bin/llvm-ar" extra_cflags=["-I$(STORES_INSTALL)/include"] extra_ldflags=["-L$(STORES_INSTALL)/lib","-L$(STORES_INSTALL)/lib64","-static-pie"] $(SKIA_FLAGS)' && \
+		bin/gn gen ../build-lfi-stores --args='target_cpu="arm64" cc="$(LFI_ROOT)/aarch64-lfi-stores-clang/bin/clang" cxx="$(LFI_ROOT)/aarch64-lfi-stores-clang/bin/clang++" ar="$(LFI_ROOT)/aarch64-lfi-stores-clang/bin/llvm-ar" extra_cflags=["-I$(STORES_INSTALL)/include"] extra_ldflags=["-L$(STORES_INSTALL)/lib","-L$(STORES_INSTALL)/lib64","-static-pie"] $(SKIA_FLAGS)' && \
 		cd ../build-lfi-stores && ninja
 
 build-native: $(TARGET_DIR)
 	cd $(TARGET_DIR) && \
 		PKG_CONFIG_PATH="$(NATIVE_INSTALL)/lib/pkgconfig:$(NATIVE_INSTALL)/lib64/pkgconfig" \
-		bin/gn gen ../build-native --args='target_cpu="arm64" cc="/opt/aarch64-native-clang/bin/clang" cxx="/opt/aarch64-native-clang/bin/clang++" ar="/opt/aarch64-native-clang/bin/llvm-ar" extra_cflags=["-I$(NATIVE_INSTALL)/include"] extra_ldflags=["-L$(NATIVE_INSTALL)/lib","-L$(NATIVE_INSTALL)/lib64","-static-pie"] $(SKIA_FLAGS)' && \
+		bin/gn gen ../build-native --args='target_cpu="arm64" cc="$(LFI_ROOT)/aarch64-native-clang/bin/clang" cxx="$(LFI_ROOT)/aarch64-native-clang/bin/clang++" ar="$(LFI_ROOT)/aarch64-native-clang/bin/llvm-ar" extra_cflags=["-I$(NATIVE_INSTALL)/include"] extra_ldflags=["-L$(NATIVE_INSTALL)/lib","-L$(NATIVE_INSTALL)/lib64","-static-pie"] $(SKIA_FLAGS)' && \
 		cd ../build-native && ninja
 
 # Build benchmark executables
 build-lfi/decode-benchmark: build-lfi decode-benchmark.cpp
-	/opt/aarch64-lfi-clang/bin/clang++ -std=c++17 -O2 -static-pie \
+	$(LFI_ROOT)/aarch64-lfi-clang/bin/clang++ -std=c++17 -O2 -static-pie \
 		-I$(TARGET_DIR) -I$(LFI_INSTALL)/include \
 		-L$(LFI_INSTALL)/lib -L$(LFI_INSTALL)/lib64 -Lbuild-lfi \
 		decode-benchmark.cpp -lskia -ljpeg -lwebpdemux -lwebp -lpng -lz -lpthread -ldl -lm \
 		-o build-lfi/decode-benchmark
 
 build-lfi-stores/decode-benchmark: build-lfi-stores decode-benchmark.cpp
-	/opt/aarch64-lfi-stores-clang/bin/clang++ -std=c++17 -O2 -static-pie \
+	$(LFI_ROOT)/aarch64-lfi-stores-clang/bin/clang++ -std=c++17 -O2 -static-pie \
 		-I$(TARGET_DIR) -I$(STORES_INSTALL)/include \
 		-L$(STORES_INSTALL)/lib -L$(STORES_INSTALL)/lib64 -Lbuild-lfi-stores \
 		decode-benchmark.cpp -lskia -ljpeg -lwebpdemux -lwebp -lpng -lz -lpthread -ldl -lm \
 		-o build-lfi-stores/decode-benchmark
 
 build-native/decode-benchmark: build-native decode-benchmark.cpp
-	/opt/aarch64-native-clang/bin/clang++ -std=c++17 -O2 -static-pie \
+	$(LFI_ROOT)/aarch64-native-clang/bin/clang++ -std=c++17 -O2 -static-pie \
 		-I$(TARGET_DIR) -I$(NATIVE_INSTALL)/include \
 		-L$(NATIVE_INSTALL)/lib -L$(NATIVE_INSTALL)/lib64 -Lbuild-native \
 		decode-benchmark.cpp -lskia -ljpeg -lwebpdemux -lwebp -lpng -lz -lpthread -ldl -lm \

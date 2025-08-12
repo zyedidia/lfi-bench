@@ -1,8 +1,8 @@
-CC     := /opt/aarch64-native-clang/bin/clang
-CXX    := /opt/aarch64-native-clang/bin/clang++
-AS     := /opt/aarch64-native-clang/bin/clang
-AR     := /opt/aarch64-native-clang/bin/llvm-ar
-STRIP  := /opt/aarch64-native-clang/bin/llvm-strip
+CC     := $(LFI_ROOT)/aarch64-native-clang/bin/clang
+CXX    := $(LFI_ROOT)/aarch64-native-clang/bin/clang++
+AS     := $(LFI_ROOT)/aarch64-native-clang/bin/clang
+AR     := $(LFI_ROOT)/aarch64-native-clang/bin/llvm-ar
+STRIP  := $(LFI_ROOT)/aarch64-native-clang/bin/llvm-strip
 
 include Makefile
 
