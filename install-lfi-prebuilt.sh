@@ -4,7 +4,7 @@
 LFI_ROOT=${LFI_ROOT:-/opt}
 
 if [ -d $LFI_ROOT ]; then
-    echo "LFI root directory already exists. Please remove it first."
+    echo "LFI_ROOT directory '$LFI_ROOT' already exists. Please remove it first."
     exit 1
 fi
 
