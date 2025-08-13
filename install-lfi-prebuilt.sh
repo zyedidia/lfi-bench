@@ -33,6 +33,7 @@ tar -xf aarch64-lfi-clang.tar.gz
 tar -xf aarch64-lfi-stores-clang.tar.gz
 tar -xf aarch64-native-clang.tar.gz
 
+mkdir -p $LFI_ROOT
 mv aarch64-lfi-clang $LFI_ROOT
 mv aarch64-lfi-stores-clang $LFI_ROOT
 mv aarch64-native-clang $LFI_ROOT
