@@ -1,5 +1,7 @@
 # common.mk - Shared configuration for all LFI benchmarks
 
+HYPERFINE_TARGETS = LFI:lfi-run:build-lfi LFI-stores:lfi-run:build-lfi-stores Native::build-native 
+
 # LFI toolchain root directory (defaults to /opt if not set)
 LFI_ROOT ?= /opt
 export LFI_ROOT

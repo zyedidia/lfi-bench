@@ -21,7 +21,6 @@ CMAKE_INSTALL_PREFIX_NATIVE ?= --install-prefix $(NATIVE_INSTALL)
 #---ADD NEW TARGETS HERE---
 
 # Hyperfine benchmark targets (name:runner:build_dir)
-HYPERFINE_TARGETS = LFI:lfi-run:build-lfi LFI-stores:lfi-run:build-lfi-stores Native::build-native 
 
 # Common build targets
 build-lfi: $(TARGET_DIR)
